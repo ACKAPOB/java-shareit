@@ -38,19 +38,19 @@ public class ItemController {
     }
 
     @GetMapping("/{id}")
-    public ItemDto getItem (@PathVariable long id) {
+    public ItemDto getItem(@PathVariable long id) {
         log.info("Get item id = {} ", id);
         return itemService.getItem(id);
     }
 
     @GetMapping()
-    public List<ItemDto> getItems (@RequestHeader("X-Sharer-User-Id") long userId) {
+    public List<ItemDto> getItems(@RequestHeader("X-Sharer-User-Id") long userId) {
         log.info("Get items");
         return itemService.getItems(userId);
     }
 
     @GetMapping("/search")
-    public List<ItemDto> searchItems (@RequestHeader("X-Sharer-User-Id") long userId, @RequestParam String text) {
+    public List<ItemDto> searchItems(@RequestHeader("X-Sharer-User-Id") long userId, @RequestParam String text) {
         log.info("search items");
         return itemService.searchItems(text);
     }

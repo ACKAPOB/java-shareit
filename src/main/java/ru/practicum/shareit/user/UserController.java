@@ -33,28 +33,28 @@ public class UserController {
 
     @PatchMapping("/{id}")
     @ResponseStatus(HttpStatus.OK)
-    public UserDto updateUser (@Validated({Update.class}) @RequestBody UserDto userDto, @PathVariable long id) {
+    public UserDto updateUser(@Validated({Update.class}) @RequestBody UserDto userDto, @PathVariable long id) {
         log.info("Put userDto Email = {}, Name = {}", userDto.getEmail(), userDto.getName());
         return userServiceImpl.updateUser(userDto, id);
     }
 
     @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.OK)
-    public void deleteUser (@PathVariable long id) {
+    public void deleteUser(@PathVariable long id) {
         log.info("Delete user id = {} ", id);
         userServiceImpl.deleteUser(id);
     }
 
     @GetMapping("/{id}")
     @ResponseStatus(HttpStatus.OK)
-    public UserDto getUser (@PathVariable long id) {
+    public UserDto getUser(@PathVariable long id) {
         log.info("Get user id = {} ", id);
         return userServiceImpl.getUser(id);
     }
 
     @GetMapping()
     @ResponseStatus(HttpStatus.OK)
-    public List<UserDto> getUsers () {
+    public List<UserDto> getUsers() {
         log.info("Get users");
         return userServiceImpl.getUsers();
     }

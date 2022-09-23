@@ -28,7 +28,7 @@ public class ItemServiceImpl implements ItemService {
     public ItemDto createItem(ItemDto itemDto, long userId) {
         if (!userStorage.alreadyExists(userId)) {
             throw new NotFoundException(
-                    "Некорректный запрос пользователь ->" + userId + " не существует" );
+                    "Некорректный запрос пользователь ->" + userId + " не существует");
         }
         log.info("Запрос на добавление " + userId + " " + itemDto);
         itemStorage.createItem(itemMapper.toItem(itemDto, itemStorage.genId(), userId));
@@ -39,7 +39,7 @@ public class ItemServiceImpl implements ItemService {
     public ItemDto updateItem(ItemDto itemDto, long id, long userId) {
         if (itemStorage.getItem(id).getOwner() != userId) {
             throw new NotFoundException(
-                    "Некорректный запрос пользователь указан неверно" );
+                    "Некорректный запрос пользователь указан неверно");
         }
         itemStorage.updateItem(itemMapper.toItem(itemDto, id, userId));
         return itemMapper.toItemDto(itemStorage.getItem(id));
@@ -52,7 +52,7 @@ public class ItemServiceImpl implements ItemService {
 
     @Override
     public List<ItemDto> getItems(long userId) {
-        List <ItemDto> itemDtoList = new ArrayList<>();
+        List<ItemDto> itemDtoList = new ArrayList<>();
         for (Item out : itemStorage.getItems()) {
             if (out.getOwner() == userId) {
                 itemDtoList.add(itemMapper.toItemDto(out));
@@ -66,7 +66,7 @@ public class ItemServiceImpl implements ItemService {
         if (search.isBlank()) {
             return Collections.emptyList();
         }
-          List <ItemDto> out = new ArrayList<>();
+          List<ItemDto> out = new ArrayList<>();
           for (Item item : itemStorage.searchItems(search)) {
               out.add(itemMapper.toItemDto(item));
           }

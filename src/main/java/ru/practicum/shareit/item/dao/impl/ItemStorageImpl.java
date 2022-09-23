@@ -21,11 +21,11 @@ public class ItemStorageImpl implements ItemStorage {
 
     @Override
     public Item updateItem(Item item) {
-        if (item.getName()!= null) {
+        if (item.getName() != null) {
             itemList.get(item.getId()).setName(item.getName());
         }
 
-        if (item.getDescription()!= null) {
+        if (item.getDescription() != null) {
             itemList.get(item.getId()).setDescription(item.getDescription());
         }
 

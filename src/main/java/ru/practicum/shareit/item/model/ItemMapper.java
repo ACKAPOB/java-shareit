@@ -8,25 +8,25 @@ import ru.practicum.shareit.item.dto.ItemDto;
 @Component
 public class ItemMapper {
 
-    public Item toItem (ItemDto itemDto, long id, long userId) {
+    public Item toItem(ItemDto itemDto, long id, long userId) {
         return new Item(
-                id
-                ,itemDto.getName()
-                ,itemDto.getDescription()
-                ,itemDto.getAvailable()
-                ,userId
-                ,itemDto.getRequest() != null ? itemDto.getRequest() : null
+                id,
+                itemDto.getName(),
+                itemDto.getDescription(),
+                itemDto.getAvailable(),
+                userId,
+                itemDto.getRequest() != null ? itemDto.getRequest() : null
         );
     }
 
-   public ItemDto toItemDto (Item item) {
+   public ItemDto toItemDto(Item item) {
         return new ItemDto(
-                item.getId()
-                ,item.getName()
-                ,item.getDescription()
-                ,item.getAvailable()
-                ,item.getOwner()
-                ,item.getRequest() != null ? item.getRequest() : null
+                item.getId(),
+                item.getName(),
+                item.getDescription(),
+                item.getAvailable(),
+                item.getOwner(),
+                item.getRequest() != null ? item.getRequest() : null
         );
     }
 }

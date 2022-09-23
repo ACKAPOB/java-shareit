@@ -20,7 +20,7 @@ public class UserStorageImpl implements UserStorage {
 
     @Override
     public User updateUser(User user) {
-        if (user.getName()!= null) {
+        if (user.getName() != null) {
             userList.get(user.getId()).setName(user.getName());
         }
         if (user.getEmail() != null) {
@@ -35,7 +35,7 @@ public class UserStorageImpl implements UserStorage {
     }
 
     @Override
-    public User getUser (String email) {
+    public User getUser(String email) {
         for (User user : userList.values()) {
             if (Objects.equals(user.getEmail(), email)) {
                 return user;
@@ -50,7 +50,7 @@ public class UserStorageImpl implements UserStorage {
     }
 
     @Override
-    public List<User> getUsers () {
+    public List<User> getUsers() {
             return new ArrayList<>(userList.values());
     }
 
