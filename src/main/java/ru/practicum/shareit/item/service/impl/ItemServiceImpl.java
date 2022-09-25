@@ -71,7 +71,7 @@ public class ItemServiceImpl implements ItemService {
 
     @Override
     public List<ItemDto> getItems(long userId) {
-        return itemStorage.getItems().stream().filter(x->x.getOwner() == userId).map(itemMapper::toItemDto).collect(toList());
+        return itemStorage.getItems().stream().filter(x -> x.getOwner() == userId).map(itemMapper::toItemDto).collect(toList());
     }
 
     @Override
@@ -79,7 +79,7 @@ public class ItemServiceImpl implements ItemService {
         if (search.isBlank()) {
             return Collections.emptyList();
         }
-          return itemStorage.searchItems(search).stream().map(itemMapper::toItemDto).collect(toList());
+        return itemStorage.searchItems(search).stream().map(itemMapper::toItemDto).collect(toList());
 
     }
 }
