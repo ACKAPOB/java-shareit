@@ -10,10 +10,10 @@ import lombok.*;
 @NoArgsConstructor
 public class Item {
 
-    @EqualsAndHashCode.Exclude
+    @EqualsAndHashCode.Include
     private long id;
 
-    @EqualsAndHashCode.Include // Непонятно как Item сравнивать, поусть пока что будет только по имени
+    @EqualsAndHashCode.Exclude // Непонятно как Item сравнивать, поусть пока что будет только по имени
     private String name;
 
     @EqualsAndHashCode.Exclude

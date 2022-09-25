@@ -8,9 +8,6 @@ public interface ItemStorage {
 
     Item createItem(Item item);
 
-
-    Item updateItem(Item item);
-
     void deleteItem(Item item);
 
     Item getItem(long id);

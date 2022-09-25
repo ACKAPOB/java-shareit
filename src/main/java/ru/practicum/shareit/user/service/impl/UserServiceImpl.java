@@ -1,32 +1,29 @@
 package ru.practicum.shareit.user.service.impl;
 
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import ru.practicum.shareit.user.dao.UserStorage;
 import ru.practicum.shareit.user.dto.UserDto;
 import ru.practicum.shareit.user.exception.AlreadyExistsException;
-import ru.practicum.shareit.user.model.User;
 import ru.practicum.shareit.user.model.UserMapper;
 import ru.practicum.shareit.user.service.UserService;
 
-import java.util.ArrayList;
 import java.util.List;
 
+import static java.util.stream.Collectors.toList;
+
 @Service
+@RequiredArgsConstructor
+@Slf4j
 public class UserServiceImpl implements UserService {
-    long id = 0;
+    private long id = 0;
     private final UserStorage userStorage;
-
     private final UserMapper userMapper;
-
-    @Autowired
-    public UserServiceImpl(UserStorage userStorage, UserMapper userMapper) {
-        this.userStorage = userStorage;
-        this.userMapper = userMapper;
-    }
 
     @Override
     public UserDto createUser(UserDto userDto) {
+        log.info("Запрос на добавление " + userDto);
         if (userStorage.alreadyExists(userDto.getEmail())) {
             throw new AlreadyExistsException(
                     "Некорректный запрос, пользователь уже существует  " + userDto.getId() + " , " + userDto.getEmail());
@@ -36,15 +33,22 @@ public class UserServiceImpl implements UserService {
     }
 
     public UserDto updateUser(UserDto userDto, long id) {
+        log.info("Запрос на обновление " + userDto + " , id пользователя " + id);
         if (userStorage.alreadyExists(userDto.getEmail())) {
             throw new AlreadyExistsException(
                     "Некорректный запрос " + userDto);
         }
-        userStorage.updateUser(userMapper.toUser(userDto, id));
+        if (userDto.getName() != null) {
+            userStorage.getUser(id).setName(userDto.getName());
+        }
+        if (userDto.getEmail() != null) {
+            userStorage.getUser(id).setEmail(userDto.getEmail());
+        }
         return userMapper.toUserDto(userStorage.getUser(id));
     }
 
     public void deleteUser(long id) {
+        log.info("Запрос на удаление пользователя " + id);
         if (!userStorage.alreadyExists(id)) {
             throw new AlreadyExistsException(
                     "Некорректный запрос, пользователь не существует ");
@@ -61,10 +65,6 @@ public class UserServiceImpl implements UserService {
     }
 
     public List<UserDto> getUsers() {
-        List<UserDto> userDtoList = new ArrayList<>();
-        for (User out : userStorage.getUsers()) {
-            userDtoList.add(userMapper.toUserDto(out));
-        }
-        return userDtoList;
+        return userStorage.getUsers().stream().map(userMapper::toUserDto).collect(toList());
     }
 }

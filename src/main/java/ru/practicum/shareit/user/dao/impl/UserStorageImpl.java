@@ -19,17 +19,6 @@ public class UserStorageImpl implements UserStorage {
     }
 
     @Override
-    public User updateUser(User user) {
-        if (user.getName() != null) {
-            userList.get(user.getId()).setName(user.getName());
-        }
-        if (user.getEmail() != null) {
-            userList.get(user.getId()).setEmail(user.getEmail());
-        }
-        return userList.get(user.getId());
-    }
-
-    @Override
     public void deleteUser(User user) {
         userList.remove(user.getId());
     }

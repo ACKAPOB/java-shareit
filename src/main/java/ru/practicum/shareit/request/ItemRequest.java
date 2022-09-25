@@ -17,7 +17,6 @@ import java.time.LocalDate;
 @NoArgsConstructor
 public class ItemRequest {
 
-    @EqualsAndHashCode.Exclude
     private long id;  //уникальный идентификатор запроса;
 
     @NotBlank(message = "Description cannot be empty or null")

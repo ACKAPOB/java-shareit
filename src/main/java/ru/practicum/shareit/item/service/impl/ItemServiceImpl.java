@@ -11,9 +11,10 @@ import ru.practicum.shareit.item.model.ItemMapper;
 import ru.practicum.shareit.item.service.ItemService;
 import ru.practicum.shareit.user.dao.UserStorage;
 
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+
+import static java.util.stream.Collectors.toList;
 
 @Service
 @Slf4j
@@ -26,22 +27,41 @@ public class ItemServiceImpl implements ItemService {
 
     @Override
     public ItemDto createItem(ItemDto itemDto, long userId) {
+        log.info("Запрос на добавление " + userId + " " + itemDto);
         if (!userStorage.alreadyExists(userId)) {
             throw new NotFoundException(
                     "Некорректный запрос пользователь ->" + userId + " не существует");
         }
-        log.info("Запрос на добавление " + userId + " " + itemDto);
         itemStorage.createItem(itemMapper.toItem(itemDto, itemStorage.genId(), userId));
         return itemMapper.toItemDto(itemStorage.getItem(itemDto.getName()));
     }
 
     @Override
     public ItemDto updateItem(ItemDto itemDto, long id, long userId) {
+        log.info("Запрос на обновление " + userId + " " + itemDto);
+        if (!userStorage.alreadyExists(userId)) {
+            throw new NotFoundException(
+                    "Некорректный запрос пользователь ->" + userId + " не существует");
+        }
         if (itemStorage.getItem(id).getOwner() != userId) {
             throw new NotFoundException(
                     "Некорректный запрос пользователь указан неверно");
         }
-        itemStorage.updateItem(itemMapper.toItem(itemDto, id, userId));
+
+        if (itemDto.getName() != null) {
+            itemStorage.getItem(id).setName(itemDto.getName());
+        }
+
+        if (itemDto.getDescription() != null) {
+            itemStorage.getItem(id).setDescription(itemDto.getDescription());
+        }
+
+        if (itemDto.getAvailable() != null) {
+            itemStorage.getItem(id).setAvailable(itemDto.getAvailable());
+        }
+
+        itemStorage.getItem(id).setOwner(userId);
+
         return itemMapper.toItemDto(itemStorage.getItem(id));
     }
 
@@ -52,13 +72,7 @@ public class ItemServiceImpl implements ItemService {
 
     @Override
     public List<ItemDto> getItems(long userId) {
-        List<ItemDto> itemDtoList = new ArrayList<>();
-        for (Item out : itemStorage.getItems()) {
-            if (out.getOwner() == userId) {
-                itemDtoList.add(itemMapper.toItemDto(out));
-            }
-        }
-        return itemDtoList;
+        return itemStorage.getItems().stream().filter(x-> x.getOwner() == userId).map(itemMapper :: toItemDto).collect(toList());
     }
 
     @Override
@@ -66,10 +80,7 @@ public class ItemServiceImpl implements ItemService {
         if (search.isBlank()) {
             return Collections.emptyList();
         }
-          List<ItemDto> out = new ArrayList<>();
-          for (Item item : itemStorage.searchItems(search)) {
-              out.add(itemMapper.toItemDto(item));
-          }
-        return out;
+          return itemStorage.searchItems(search).stream().map(itemMapper :: toItemDto).collect(toList());
+
     }
 }
