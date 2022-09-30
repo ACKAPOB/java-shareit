@@ -3,75 +3,81 @@ package ru.practicum.shareit.item.service.impl;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import ru.practicum.shareit.item.dao.ItemStorage;
 import ru.practicum.shareit.item.dto.ItemDto;
 import ru.practicum.shareit.item.exception.NotFoundException;
+import ru.practicum.shareit.item.model.Item;
 import ru.practicum.shareit.item.model.ItemMapper;
+import ru.practicum.shareit.item.repository.ItemRepository;
 import ru.practicum.shareit.item.service.ItemService;
 import ru.practicum.shareit.user.dao.UserStorage;
+import ru.practicum.shareit.user.repository.UserRepository;
 
 import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
 
 import static java.util.stream.Collectors.toList;
 
 @Service
 @Slf4j
 @RequiredArgsConstructor
+@Transactional(readOnly = true)
 public class ItemServiceImpl implements ItemService {
 
     private final ItemStorage itemStorage;
     private final UserStorage userStorage;
     private final ItemMapper itemMapper;
 
+    private final ItemRepository repository;
+    private final UserRepository userRepository;
+
+    @Transactional
     @Override
-    public ItemDto createItem(ItemDto itemDto, long userId) {
+    public ItemDto createItem(ItemDto itemDto, Long userId) {
         log.info("Запрос на добавление " + userId + " " + itemDto);
-        if (!userStorage.alreadyExists(userId)) {
+        Item item;
+        if (userRepository.existsById(userId)) {
+            item = repository.save(itemMapper.toItem(itemDto, userRepository.findById(userId).get()));
+        } else
             throw new NotFoundException(
                     "Некорректный запрос пользователь ->" + userId + " не существует");
-        }
-        itemStorage.createItem(itemMapper.toItem(itemDto, itemStorage.genId(), userId));
-        return itemMapper.toItemDto(itemStorage.getItem(itemDto.getName()));
+        return itemMapper.toItemDto(item);
     }
 
     @Override
-    public ItemDto updateItem(ItemDto itemDto, long id, long userId) {
+    public ItemDto updateItem(ItemDto itemDto, Long id, Long userId) {
         log.info("Запрос на обновление " + userId + " " + itemDto);
-        if (!userStorage.alreadyExists(userId)) {
+
+        if (userRepository.existsById(userId) && repository.existsById(id)) {
+            if (itemDto.getName() != null) {
+                repository.findById(id).get().setName(itemDto.getName());
+            }
+            if (itemDto.getDescription() != null) {
+                repository.findById(id).get().setDescription(itemDto.getDescription());
+            }
+            if (itemDto.getAvailable() != null) {
+                repository.findById(id).get().setAvailable(itemDto.getAvailable());
+            }
+        } else {
             throw new NotFoundException(
                     "Некорректный запрос пользователь ->" + userId + " не существует");
         }
-        if (itemStorage.getItem(id).getOwner() != userId) {
-            throw new NotFoundException(
-                    "Некорректный запрос пользователь указан неверно");
-        }
-
-        if (itemDto.getName() != null) {
-            itemStorage.getItem(id).setName(itemDto.getName());
-        }
-
-        if (itemDto.getDescription() != null) {
-            itemStorage.getItem(id).setDescription(itemDto.getDescription());
-        }
-
-        if (itemDto.getAvailable() != null) {
-            itemStorage.getItem(id).setAvailable(itemDto.getAvailable());
-        }
-
-        itemStorage.getItem(id).setOwner(userId);
-
-        return itemMapper.toItemDto(itemStorage.getItem(id));
+        return itemMapper.toItemDto(repository.findById(id).get());
     }
 
     @Override
-    public ItemDto getItem(long id) {
-        return itemMapper.toItemDto(itemStorage.getItem(id));
+    public ItemDto getItem(Long id) {
+        if (repository.findById(id).isPresent()) {
+            return itemMapper.toItemDto(repository.findById(id).get());
+        } else
+            throw new NotFoundException("Некорректный запрос, запись не найдена - > " + id);
     }
 
     @Override
-    public List<ItemDto> getItems(long userId) {
-        return itemStorage.getItems().stream().filter(x -> x.getOwner() == userId).map(itemMapper::toItemDto).collect(toList());
+    public List<ItemDto> getItems(Long userId) {
+        return repository.findAll().stream().filter(x -> x.getOwner() == userRepository.findById(userId).get()).map(itemMapper::toItemDto).collect(toList());
     }
 
     @Override
@@ -79,7 +85,13 @@ public class ItemServiceImpl implements ItemService {
         if (search.isBlank()) {
             return Collections.emptyList();
         }
-        return itemStorage.searchItems(search).stream().map(itemMapper::toItemDto).collect(toList());
-
+        return repository
+                .findAll()
+                .stream()
+                .filter(Item::getAvailable)
+                .filter(item -> item.getName().toLowerCase().contains(search.toLowerCase())
+                        || item.getDescription().toLowerCase().contains(search.toLowerCase()))
+                .map(itemMapper::toItemDto)
+                .collect(toList());
     }
 }

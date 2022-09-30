@@ -1,6 +1,10 @@
 package ru.practicum.shareit.item.model;
 
 import lombok.*;
+import ru.practicum.shareit.request.model.Request;
+import ru.practicum.shareit.user.model.User;
+
+import javax.persistence.*;
 
 /**
  * TODO Sprint add-controllers.
@@ -8,23 +12,23 @@ import lombok.*;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
+@Entity
+@Table(name = "items")
 public class Item {
 
-    @EqualsAndHashCode.Include
-    private long id;
-
-    @EqualsAndHashCode.Exclude // Непонятно как Item сравнивать, поусть пока что будет только по имени
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
     private String name;
-
-    @EqualsAndHashCode.Exclude
-    private String description; //максимальная длина описания — 200 символов;
-
-    @EqualsAndHashCode.Exclude
+    private String description;
     private Boolean available; //статус о том, доступна или нет вещь для аренды
 
-    @EqualsAndHashCode.Exclude
-    private long owner; //владелец вещи
+    @ManyToOne
+    @JoinColumn(name = "owner_id")
+    private User owner; //владелец вещи
 
-    @EqualsAndHashCode.Exclude
-    private Long request; //если вещь была создана по запросу другого пользователя, то в этом поле будет храниться ссылка на соответствующий запрос
+    @ManyToOne
+    @JoinColumn(name = "request_id")
+    private Request request;
+    //если вещь была создана по запросу другого пользователя, то в этом поле будет храниться ссылка на соответствующий запрос
 }

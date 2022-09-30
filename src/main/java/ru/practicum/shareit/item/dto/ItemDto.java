@@ -1,7 +1,9 @@
 package ru.practicum.shareit.item.dto;
 
 import lombok.*;
+import ru.practicum.shareit.request.model.Request;
 import ru.practicum.shareit.user.Create;
+import ru.practicum.shareit.user.model.User;
 
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
@@ -26,8 +28,8 @@ public class ItemDto {
     private Boolean available; //статус о том, доступна или нет вещь для аренды
 
     @NotNull(groups = {Create.class}, message = "Owner cannot be null")
-    private long owner; //владелец вещи
+    private User owner; //владелец вещи
 
-    private Long request; //если вещь была создана по запросу другого пользователя, то в этом поле будет храниться ссылка на соответствующий запрос
+    private Request request; //если вещь была создана по запросу другого пользователя, то в этом поле будет храниться ссылка на соответствующий запрос
 
 }

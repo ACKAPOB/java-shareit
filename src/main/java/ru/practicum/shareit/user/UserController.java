@@ -25,7 +25,6 @@ public class UserController {
     }
 
     @PostMapping()
-    @ResponseStatus(HttpStatus.CREATED)
     public UserDto createUser(@Validated({Create.class}) @RequestBody UserDto userDto) {
         log.info("Post userDto Email = {}, Name = {}", userDto.getEmail(), userDto.getName());
         return userServiceImpl.createUser(userDto);
