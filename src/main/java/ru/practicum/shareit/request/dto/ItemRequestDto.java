@@ -23,7 +23,4 @@ public class ItemRequestDto {
 
     @NotBlank(message = "requestor cannot be empty or null")
     private Long requestor;  //пользователь, создавший запрос;
-
-    @NotBlank(message = "created cannot be empty or null")
-    private LocalDateTime created;  //дата и время создания запроса.
 }

@@ -9,10 +9,12 @@ import ru.practicum.shareit.user.dto.UserDto;
 public class UserMapper {
 
     public User toUser(UserDto userDto, long id) {
+
         return new User(id, userDto.getName(), userDto.getEmail());
     }
 
     public UserDto toUserDto(User user) {
+
         return new UserDto(user.getId(), user.getName(), user.getEmail());
     }
 
@@ -22,6 +24,7 @@ public class UserMapper {
     }
 
     public UserDto toUserDtoDB(User user) {
+
         return new UserDto(user.getId(), user.getName(), user.getEmail());
     }
 }

@@ -4,19 +4,19 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import ru.practicum.shareit.item.dao.ItemStorage;
 import ru.practicum.shareit.item.dto.ItemDto;
 import ru.practicum.shareit.item.exception.NotFoundException;
 import ru.practicum.shareit.item.model.Item;
 import ru.practicum.shareit.item.model.ItemMapper;
 import ru.practicum.shareit.item.repository.ItemRepository;
 import ru.practicum.shareit.item.service.ItemService;
-import ru.practicum.shareit.user.dao.UserStorage;
+import ru.practicum.shareit.user.model.User;
 import ru.practicum.shareit.user.repository.UserRepository;
 
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
+
 
 import static java.util.stream.Collectors.toList;
 
@@ -26,8 +26,6 @@ import static java.util.stream.Collectors.toList;
 @Transactional(readOnly = true)
 public class ItemServiceImpl implements ItemService {
 
-    private final ItemStorage itemStorage;
-    private final UserStorage userStorage;
     private final ItemMapper itemMapper;
 
     private final ItemRepository repository;
@@ -47,19 +45,30 @@ public class ItemServiceImpl implements ItemService {
     }
 
     @Override
+    @Transactional
     public ItemDto updateItem(ItemDto itemDto, Long id, Long userId) {
-        log.info("Запрос на обновление " + userId + " " + itemDto);
+        log.info("Запрос на обновление userId" + userId + " itemsId " + id + " " + itemDto);
+        if (repository.findById(id).get().getOwner().getId() != userId) {
+            throw new NotFoundException("Ошибка пользователя");
+        }
 
-        if (userRepository.existsById(userId) && repository.existsById(id)) {
+        Optional<Item> item = repository.findById(id);
+
+        if (repository.existsById(id)) {
             if (itemDto.getName() != null) {
-                repository.findById(id).get().setName(itemDto.getName());
+                //repository.findById(id).get().setName(itemDto.getName());
+                item.get().setName(itemDto.getName());
             }
             if (itemDto.getDescription() != null) {
-                repository.findById(id).get().setDescription(itemDto.getDescription());
+                //repository.findById(id).get().setDescription(itemDto.getDescription());
+                item.get().setDescription(itemDto.getDescription());
             }
             if (itemDto.getAvailable() != null) {
-                repository.findById(id).get().setAvailable(itemDto.getAvailable());
+                //repository.findById(id).get().setAvailable(itemDto.getAvailable());
+                item.get().setAvailable(itemDto.getAvailable());
             }
+            item.get().setId(id);
+            repository.save(item.get());
         } else {
             throw new NotFoundException(
                     "Некорректный запрос пользователь ->" + userId + " не существует");
