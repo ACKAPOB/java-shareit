@@ -2,23 +2,21 @@ package ru.practicum.shareit.comment.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
-import lombok.NoArgsConstructor;
-import ru.practicum.shareit.item.model.Item;
-import ru.practicum.shareit.user.Create;
-import ru.practicum.shareit.user.model.User;
+import lombok.NonNull;
+import lombok.RequiredArgsConstructor;
+import ru.practicum.shareit.item.dto.ItemDto;
 
-import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotNull;
+import java.time.LocalDateTime;
 
-@AllArgsConstructor
-@NoArgsConstructor
 @Data
+@AllArgsConstructor
+@RequiredArgsConstructor
 public class CommentDto {
-    private long id;
-    @NotBlank(groups = {Create.class}, message = "Name cannot be empty or null")
+
+    private Long id;
+    @NonNull
     private String text;
-    @NotNull(groups = {Create.class},message = "item cannot be null")
-    private Item item;
-    @NotNull(groups = {Create.class},message = "user cannot be null")
-    private User user;
+    private ItemDto item;
+    private String authorName;
+    private LocalDateTime created;
 }

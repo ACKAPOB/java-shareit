@@ -22,7 +22,7 @@ public class User {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     //https://habr.com/ru/company/haulmont/blog/653843/
     //Если название поля в модели отличается от имени поля в базе, нужно обязательно указать маппинг между ними с помощью аннотации @Column.
-    private long id;
+    private Long id;
     @Column(name = "name")
     private String name;
     @Column(name = "email")

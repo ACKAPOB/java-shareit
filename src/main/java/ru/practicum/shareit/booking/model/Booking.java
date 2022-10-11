@@ -15,28 +15,26 @@ import java.time.LocalDateTime;
 @Entity
 @Table(name = "bookings")
 public class Booking {
+    public  Booking(LocalDateTime start, LocalDateTime end) {
+        this.start = start;
+        this.end = end;
+    }
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    @Column(name = "start_date")
-    private LocalDateTime startDate;
-    @Column(name = "end_date")
-    private LocalDateTime endDate;
-    @ManyToOne
-    @JoinColumn(name = "item_id")
+    @Column(name = "start_date", nullable = false)
+    private LocalDateTime start;
+    @Column(name = "end_date", nullable = false)
+    private LocalDateTime end;
+    @ManyToOne(fetch=FetchType.EAGER,
+            cascade=CascadeType.ALL)
+    @JoinColumn(name="item_id")
     private Item item;
-    @ManyToOne
-    @JoinColumn(name = "booker_id")
-    private User user;
+    @ManyToOne(fetch=FetchType.EAGER,
+            cascade=CascadeType.ALL)
+    @JoinColumn(name="booker_id")
+    private User booker;
     @Enumerated(EnumType.STRING)
     private Status status;
 }
-
-/*
-    start_date  TIMESTAMP WITHOUT TIME ZONE                     NOT NULL,
-    end_date    TIMESTAMP WITHOUT TIME ZONE                     NOT NULL,
-    item_id     BIGINT                                          NOT NULL,
-    booker_id BIGINT                                            NOT NULL,
-    status VARCHAR(255)                                         NOT NULL,
- */

@@ -5,11 +5,10 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.practicum.shareit.item.exception.NotFoundException;
-import ru.practicum.shareit.user.dao.UserStorage;
 import ru.practicum.shareit.user.dto.UserDto;
 import ru.practicum.shareit.user.exception.AlreadyExistsException;
 import ru.practicum.shareit.user.model.User;
-import ru.practicum.shareit.user.model.UserMapper;
+import ru.practicum.shareit.user.dto.UserMapper;
 import ru.practicum.shareit.user.repository.UserRepository;
 import ru.practicum.shareit.user.service.UserService;
 
@@ -24,7 +23,6 @@ import static java.util.stream.Collectors.toList;
 @Transactional(readOnly = true)
 public class UserServiceImpl implements UserService {
     private long id = 0;
-    private final UserStorage userStorage;
     private final UserMapper userMapper;
     private final UserRepository repository;
 
@@ -40,7 +38,6 @@ public class UserServiceImpl implements UserService {
     @Override
     @Transactional
     public UserDto updateUser(UserDto userDto, long id) {
-        log.info("Запрос на обновление " + userDto + " , id пользователя " + id);
         if (!repository.existsById(id)) {
             throw new AlreadyExistsException(
                     "Некорректный запрос " + userDto);
@@ -54,17 +51,18 @@ public class UserServiceImpl implements UserService {
             user.get().setEmail(userDto.getEmail());
         }
         repository.save(user.get());
+        log.info("Запрос на обновление " + userDto + " , id пользователя " + id);
         return userMapper.toUserDtoDB(user.get());
     }
 
     @Override
     @Transactional
     public void deleteUser(long id) {
-        log.info("Запрос на удаление пользователя " + id);
         if (!repository.existsById(id)) {
             throw new AlreadyExistsException(
                     "Некорректный запрос, пользователь не существует ");
         }
+        log.info("Запрос на удаление пользователя " + id);
         repository.delete(repository.findById(id).get());
     }
     @Override
