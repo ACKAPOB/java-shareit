@@ -4,24 +4,25 @@ import org.springframework.transaction.annotation.Transactional;
 import ru.practicum.shareit.booking.dto.BookingDtoById;
 import ru.practicum.shareit.booking.dto.BookingDtoIn;
 import ru.practicum.shareit.booking.dto.BookingDtoOut;
+import ru.practicum.shareit.booking.exception.BadRequestException;
 import ru.practicum.shareit.booking.exception.MessageFailedException;
 
-import javax.validation.constraints.PositiveOrZero;
 import java.util.List;
 import java.util.Optional;
 
 public interface BookingService {
-    public BookingDtoById createBooking(Optional<Long> idUser, Optional<BookingDtoIn> bookingDtoIn);
 
-    BookingDtoOut updateStatus(Optional<Long> idUser, Optional<Long> approved, Boolean bookingId);
 
-    BookingDtoOut getBookingById(Optional<Long> idUser, Optional<Long> bookingId);
+    @Transactional
+    BookingDtoById createBooking(Optional<Long> userId, Optional<BookingDtoIn> bookingDtoIn);
 
-    List<BookingDtoOut> getBookingsState(Optional<Long> idUser, Optional<Integer> from, Optional<Integer> size, String state)
-    throws MessageFailedException;
+    BookingDtoOut updateStatus(Optional<Long> userId, Optional<Long> bookingId, Boolean approved);
 
-    List<BookingDtoOut> getBookingsOwnerState(Optional<Long> idUser, @PositiveOrZero Optional<Integer> from, @PositiveOrZero Optional<Integer> size, String state)
-    throws MessageFailedException;
+    BookingDtoOut getBookingById(Optional<Long> userId, Optional<Long> bookingId);
 
-    List<BookingDtoOut> getBookingsAllById(Optional<Long> userId);
+    List<BookingDtoOut> getBookingsState(Optional<Long> userId, String state)
+            throws BadRequestException, MessageFailedException;
+
+    List<BookingDtoOut> getBookingsOwnerState(Optional<Long> userId, String state) throws
+    MessageFailedException;
 }

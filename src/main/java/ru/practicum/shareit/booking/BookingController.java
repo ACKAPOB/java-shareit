@@ -1,8 +1,6 @@
 package ru.practicum.shareit.booking;
 
-import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import ru.practicum.shareit.booking.dto.BookingDtoById;
 import ru.practicum.shareit.booking.dto.BookingDtoIn;
@@ -10,10 +8,7 @@ import ru.practicum.shareit.booking.dto.BookingDtoOut;
 import ru.practicum.shareit.booking.exception.MessageFailedException;
 import ru.practicum.shareit.booking.service.BookingService;
 
-import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
-import javax.validation.constraints.Positive;
-import javax.validation.constraints.PositiveOrZero;
 import java.util.List;
 import java.util.Optional;
 
@@ -23,61 +18,48 @@ import java.util.Optional;
 @RestController
 @RequestMapping("/bookings")
 @Slf4j
-@RequiredArgsConstructor
 public class BookingController {
 
     BookingService bookingService;
-    @Autowired
-    protected BookingController(BookingService bookingService) {
-        this.bookingService = bookingService;
-    }
 
-    @RequestMapping(value ="/", produces = "application/json")
-    protected String getURLValue(HttpServletRequest request){
-        return request.getRequestURI();
+    public BookingController(BookingService bookingService) {
+        this.bookingService = bookingService;
     }
 
     @PostMapping()
     protected BookingDtoById createBooking(@Valid @RequestHeader("X-Sharer-User-Id") Optional<Long> userId,
-                                    @RequestBody Optional<BookingDtoIn> bookingDtoIn){
+        @RequestBody Optional<BookingDtoIn> bookingDtoIn) {
         log.info("Создание Booking BookingController.createBooking, userId = {}", userId);
         return bookingService.createBooking(userId, bookingDtoIn);
     }
+
     @PatchMapping("/{bookingId}")
     protected BookingDtoOut updateStatus(@RequestHeader("X-Sharer-User-Id") Optional<Long> userId,
-                                      @PathVariable Optional<Long> bookingId, @RequestParam(value="approved") Boolean approved) {
+        @PathVariable Optional<Long> bookingId, @RequestParam(value="approved") Boolean approved) {
         log.info("Обновление Booking BookingController.updateStatus, userId = {}", userId);
         return bookingService.updateStatus(userId, bookingId, approved);
     }
+
     @GetMapping("/{bookingId}")
     protected BookingDtoOut getBookingById(@RequestHeader("X-Sharer-User-Id") Optional<Long> userId,
-                                          @PathVariable(value = "bookingId", required = false) Optional<Long> bookingId) {
+        @PathVariable(value = "bookingId", required = false) Optional<Long> bookingId) {
         log.info("Поиск Booking BookingController.getBookingById, userId = {}", userId);
         return bookingService.getBookingById(userId, bookingId);
     }
+
     @GetMapping()
     protected List<BookingDtoOut> getBookingsState(@RequestHeader("X-Sharer-User-Id") Optional<Long> userId,
-                                              @PositiveOrZero @RequestParam(value = "from", defaultValue = "0") Optional<Integer> from,
-                                              @Positive @RequestParam(value = "size", defaultValue = "10") Optional<Integer> size,
-                                              @RequestParam(value = "state", required = false, defaultValue = "ALL") String state)
+            @RequestParam(value = "state", required = false, defaultValue = "ALL") String state)
             throws MessageFailedException {
         log.info("Поиск Bookings BookingController.getBookingsState, userId = {}", userId);
-        return bookingService.getBookingsState(userId, from, size, state);
+        return bookingService.getBookingsState(userId, state);
     }
 
-    @GetMapping("/")
-    protected List<BookingDtoOut> getBookingsAllById(@RequestHeader("X-Sharer-User-Id") Optional<Long> userId) {
-        log.info("Поиск Bookings BookingController.getBookingsAllById, userId = {}", userId);
-        return bookingService.getBookingsAllById(userId);
-    }
     @GetMapping("/owner")
     protected List<BookingDtoOut> getBookingsOwnerState(@RequestHeader("X-Sharer-User-Id") Optional<Long> userId,
-                                                   @PositiveOrZero @RequestParam(value = "from", defaultValue = "0") Optional<Integer> from,
-                                                   @Positive @RequestParam(value = "size", defaultValue = "10") Optional<Integer> size,
-                                                   @RequestParam(value = "state", required = false, defaultValue = "ALL") String state)
+            @RequestParam(value = "state", required = false, defaultValue = "ALL") String state)
             throws MessageFailedException {
-        log.info("Поиск Bookings BookingController.getBookingsOwnerState, userId = {}, from = {}, size = {}, state = {}", userId, from, size, state);
-        return bookingService.getBookingsOwnerState(userId, from, size, state);
+        log.info("Поиск Bookings BookingController.getBookingsOwnerState, userId = {}, state = {}", userId, state);
+        return bookingService.getBookingsOwnerState(userId, state);
     }
-
 }

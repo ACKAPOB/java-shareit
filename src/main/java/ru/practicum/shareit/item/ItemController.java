@@ -8,9 +8,7 @@ import ru.practicum.shareit.comment.dto.CommentDto;
 import ru.practicum.shareit.item.dto.*;
 import ru.practicum.shareit.item.service.ItemService;
 
-import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
-import javax.validation.constraints.PositiveOrZero;
 import java.util.List;
 import java.util.Optional;
 
@@ -28,28 +26,17 @@ public class ItemController {
         this.itemService = itemService;
     }
 
-  /*  @RequestMapping(value ="/", produces = "application/json")
-    public String getURLValue(HttpServletRequest request){
-        return request.getRequestURI();
-    }*/
-    @GetMapping()
-    protected List<ItemDtoLastNext> getAllItemsOwner(@RequestHeader("X-Sharer-User-Id") Optional<Long> userId,
-                                                 @RequestParam(value = "from", required = false) Optional<Integer> from,
-                                                 @RequestParam(value = "size", required = false) Optional<Integer> size){
-        log.info("Поиск всех Item ItemController.getAllItemsOwner, userId = {}, from = {}, size = {}", userId, from, size);
-        return itemService.getAllItemsOwner(userId, from, size);
+    @PostMapping()
+    protected ItemDto createItem(@Valid @RequestHeader("X-Sharer-User-Id") Optional<Long> userId,
+                                 @RequestBody ItemDto itemDto) {
+        log.info("Создание Item ItemController.updateItem, userId = {}", userId);
+        return itemService.createItem(userId, itemDto);
     }
 
-    @GetMapping("/{id}")
-    protected ItemDtoLastNext getItemById(@RequestHeader("X-Sharer-User-Id") Optional<Long> userId,
-                                          @PathVariable Optional<Long> id) {
-        log.info("Поиск Item ItemController.getItemById, userId = {}, itemid = {}", userId, id);
-        return itemService.getItemById(userId, id);
-    }
     @PatchMapping("/{id}")
     protected ItemDto updateItem(@RequestHeader("X-Sharer-User-Id") Optional<Long> userId,
-                          @PathVariable Optional<Long> id,
-                          @RequestBody ItemDto itemDto) {
+                                 @PathVariable Optional<Long> id,
+                                 @RequestBody ItemDto itemDto) {
         log.info("Обновление Item ItemController.updateItem, userId = {}, itemid = {}, itemDto = {}", userId, id, itemDto);
         return itemService.updateItem (userId, itemDto, id);
     }
@@ -61,22 +48,33 @@ public class ItemController {
         return itemService.deleteItem(userId, id);
     }
 
-    @PostMapping()
-    protected ItemDto createItem(@Valid @RequestHeader("X-Sharer-User-Id") Optional<Long> userId,
-                                 @RequestBody ItemDto itemDto) {
-        log.info("Создание Item ItemController.updateItem, userId = {}", userId);
-        return itemService.createItem(userId, itemDto);
+
+    @GetMapping()
+    protected List<ItemDtoOut> getAllItemsOwner(@RequestHeader("X-Sharer-User-Id") Optional<Long> userId){
+        log.info("Поиск всех Item ItemController.getAllItemsOwner, userId = {}", userId);
+        return itemService.getAllItemsOwner(userId);
     }
+
+    @GetMapping("/{id}")
+    protected ItemDtoOut getItemById(@RequestHeader("X-Sharer-User-Id") Optional<Long> userId,
+                                     @PathVariable Optional<Long> id) {
+        log.info("Поиск Item ItemController.getItemById, userId = {}, itemid = {}", userId, id);
+        return itemService.getItemById(userId, id);
+    }
+
+
+
+
+
+
+
 
     @GetMapping("/search")
     protected List<ItemDto> getItemByIdSearch(
             @RequestHeader("X-Sharer-User-Id") Optional<Long> userId,
-            @RequestParam("text") String text,
-            @PositiveOrZero @RequestParam(value = "from", required = false) Optional<Integer> from,
-            @PositiveOrZero @RequestParam(value = "size", required = false) Optional<Integer> size
-    ) {
-        log.info("Поиск всех Item ItemController.getAllItems, userId = {}, text = {}, from = {}, size = {}", userId, text, from, size);
-        return itemService.getItemByIdSearch(userId, text, from, size);
+            @RequestParam("text") String text) {
+        log.info("Поиск всех Item ItemController.getAllItems, userId = {}, text = {}", userId, text);
+        return itemService.getItemByIdSearch(userId, text);
     }
 
     @PostMapping("/{itemId}/comment")
