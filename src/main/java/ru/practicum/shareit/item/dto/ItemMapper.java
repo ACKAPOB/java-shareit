@@ -5,10 +5,8 @@ import org.springframework.stereotype.Component;
 import ru.practicum.shareit.comment.dto.CommentDto;
 import ru.practicum.shareit.comment.model.Comment;
 import ru.practicum.shareit.item.model.Item;
-import ru.practicum.shareit.requests.dto.ItemRequestMapper;
 import ru.practicum.shareit.user.dto.UserMapper;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -42,8 +40,8 @@ public class ItemMapper {
             return item.stream().map(ItemMapper::toItemDto).collect(Collectors.toList());
         }
 
-        public static ItemDtoLastNext toItemDtoLastNext(Item item) {
-            return new ItemDtoLastNext(
+        public static ItemDtoOut toItemDtoOut(Item item) {
+            return new ItemDtoOut(
                     item.getId(),
                     item.getName(),
                     item.getDescription(),

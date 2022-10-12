@@ -12,9 +12,9 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 @Data
-public class ItemDtoLastNext {
+public class ItemDtoOut {
 
-    public ItemDtoLastNext (Long id, String name, String description, Boolean available){
+    public ItemDtoOut(Long id, String name, String description, Boolean available){
         this.id = id;
         this.name = name;
         this.description = description;
