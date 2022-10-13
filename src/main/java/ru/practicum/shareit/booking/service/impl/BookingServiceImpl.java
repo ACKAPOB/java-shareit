@@ -95,34 +95,28 @@ public class BookingServiceImpl implements BookingService {
             throws BadRequestException, MessageFailedException {
         User user = validationUser(userId);
         switch (state) {
-            case "ALL" -> {
+            case "ALL":
                 log.info("Получение ALL Bookings BookingServiceImpl.getBookingsState, userId = {} ", userId);
                 return BookingMapper.toListBookingDto(bookingRepository.
                         findBookingsByBookerIdOrderByStartDesc(userId.get()));
-            }
-            case "CURRENT" -> {
+            case "CURRENT":
                 log.info("Получение CURRENT Bookings BookingServiceImpl.getBookingsState, userId = {} ", userId);
                 return BookingMapper.toListBookingDto(bookingRepository.
                         findByBookingsListStateCurrent(userId.get(), LocalDateTime.now()));
-            }
-            case "PAST" -> {
+            case "PAST":
                 log.info("Получение PAST Bookings BookingServiceImpl.getBookingsState, userId = {} ", userId);
                 return BookingMapper.toListBookingDto(bookingRepository.
                         findByBookingsListStatePast(userId.get(), LocalDateTime.now()));
-            }
-            case "FUTURE" -> {
+            case "FUTURE":
                 log.info("Получение FUTURE Bookings BookingServiceImpl.getBookingsState, userId = {} ", userId);
                 return BookingMapper.toListBookingDto(bookingRepository.findByBookingsListStateFuture(userId.get()));
-            }
-            case "WAITING" -> {
+            case "WAITING":
                 log.info("Получение WAITING Bookings BookingServiceImpl.getBookingsState, userId = {} ", userId);
                 return BookingMapper.toListBookingDto(bookingRepository.findByBookingsListStateWaiting(userId.get()));
-            }
-            case "REJECTED" -> {
+            case "REJECTED":
                 log.info("Получение REJECTED Bookings BookingServiceImpl.getBookingsState, userId = {} ", userId);
                 return BookingMapper.toListBookingDto(bookingRepository.findByBookingsListStateRejected(userId.get()));
-            }
-            default -> throw new MessageFailedException();
+            default: throw new MessageFailedException();
         }
     }
 
@@ -132,37 +126,31 @@ public class BookingServiceImpl implements BookingService {
             User user = validationUser(userId);
 
             switch (state) {
-                case "ALL" -> {
+                case "ALL":
                     log.info("Получение ALL Bookings BookingServiceImpl.getBookingsOwnerState, ownerId = {} ", userId);
                     return BookingMapper.toListBookingDto(bookingRepository.
                             findByBookingsOwnerListStateAll(userId.get()));
-                }
-                case "CURRENT" -> {
+                case "CURRENT":
                     log.info("Получение CURRENT Bookings BookingServiceImpl.getBookingsOwnerState, ownerId = {} ", userId);
                     return BookingMapper.toListBookingDto(bookingRepository.
                             findByBookingsOwnerListStateCurrent(userId.get(), LocalDateTime.now()));
-                }
-                case "PAST" -> {
+                case "PAST":
                     log.info("Получение PAST Bookings BookingServiceImpl.getBookingsOwnerState, ownerId = {} ", userId);
                     return BookingMapper.toListBookingDto(bookingRepository.
                             findByBookingsOwnerListStatePast(userId.get(), LocalDateTime.now()));
-                }
-                case "FUTURE" -> {
+                case "FUTURE":
                     log.info("Получение FUTURE Bookings BookingServiceImpl.getBookingsOwnerState, ownerId = {} ", userId);
                     return BookingMapper.toListBookingDto(bookingRepository.
                             findByBookingsOwnerListStateFuture(userId.get()));
-                }
-                case "WAITING" -> {
+                case "WAITING":
                     log.info("Получение WAITING Bookings BookingServiceImpl.getBookingsOwnerState, ownerId = {} ", userId);
                     return BookingMapper.toListBookingDto(bookingRepository.
                             findByBookingsOwnerListStateWaiting(userId.get()));
-                }
-                case "REJECTED" -> {
+                case "REJECTED":
                     log.info("Получение REJECTED Bookings BookingServiceImpl.getBookingsOwnerState, ownerId = {} ", userId);
                     return BookingMapper.toListBookingDto(bookingRepository.
                             findByBookingsOwnerListStateRejected(userId.get()));
-                }
-                default -> throw new MessageFailedException();
+                default: throw new MessageFailedException();
             }
         }
         public User validationUser (Optional<Long> userId) {
