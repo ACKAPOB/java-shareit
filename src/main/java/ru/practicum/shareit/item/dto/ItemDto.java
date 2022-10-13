@@ -3,6 +3,7 @@ package ru.practicum.shareit.item.dto;
 import lombok.*;
 import ru.practicum.shareit.comment.dto.CommentDto;
 import ru.practicum.shareit.user.dto.UserDto;
+
 import javax.validation.constraints.NotBlank;
 
 import java.util.List;
@@ -15,7 +16,7 @@ import java.util.List;
 @Data
 public class ItemDto {
 
-    public ItemDto (Long id, String name, String description, Boolean available, UserDto owner, Long requestId){
+    public ItemDto(Long id, String name, String description, Boolean available, UserDto owner, Long requestId) {
         this.id = id;
         this.name = name;
         this.description = description;

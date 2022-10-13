@@ -32,7 +32,7 @@ public class Comment {
     @Column(name = "created")
     private LocalDateTime creationTime;
 
-    public Comment (Long id, String text) {
+    public Comment(Long id, String text) {
         this.id = id;
         this.text = text;
     }

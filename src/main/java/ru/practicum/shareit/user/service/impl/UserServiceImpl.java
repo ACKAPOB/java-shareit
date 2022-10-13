@@ -47,7 +47,7 @@ public class UserServiceImpl implements UserService {
         if (userDto.getName() != null && user.isPresent()) {
             user.get().setName(userDto.getName());
         }
-        if (userDto.getEmail() != null&& user.isPresent()) {
+        if (userDto.getEmail() != null && user.isPresent()) {
             user.get().setEmail(userDto.getEmail());
         }
         repository.save(user.get());
@@ -65,6 +65,7 @@ public class UserServiceImpl implements UserService {
         log.info("Запрос на удаление пользователя " + id);
         repository.delete(repository.findById(id).get());
     }
+
     @Override
     public UserDto getUser(long id) {
         if (repository.findById(id).isPresent()) {

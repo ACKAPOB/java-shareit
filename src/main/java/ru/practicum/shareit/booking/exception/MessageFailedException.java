@@ -1,6 +1,6 @@
-    package ru.practicum.shareit.booking.exception;
+package ru.practicum.shareit.booking.exception;
 
-    public class MessageFailedException extends Exception{
-        public MessageFailedException() {
-        }
+public class MessageFailedException extends Exception {
+    public MessageFailedException() {
     }
+}

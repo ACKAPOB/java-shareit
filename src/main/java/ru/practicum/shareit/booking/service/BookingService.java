@@ -12,7 +12,6 @@ import java.util.Optional;
 
 public interface BookingService {
 
-
     @Transactional
     BookingDtoById createBooking(Optional<Long> userId, Optional<BookingDtoIn> bookingDtoIn);
 
@@ -24,5 +23,5 @@ public interface BookingService {
             throws BadRequestException, MessageFailedException;
 
     List<BookingDtoOut> getBookingsOwnerState(Optional<Long> userId, String state) throws
-    MessageFailedException;
+            MessageFailedException;
 }

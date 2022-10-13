@@ -14,57 +14,60 @@ import java.util.stream.Collectors;
 @Component
 public class ItemMapper {
 
-        public static ItemDto toItemDto(Item item) {
-            return new ItemDto(
-                    item.getId(),
-                    item.getName(),
-                    item.getDescription(),
-                    item.getAvailable(),
-                    UserMapper.toUserDto(item.getOwner()),
-                    item.getRequest() != null ? item.getRequest().getId() : item.getId()
-            );
-        }
-        public static List<CommentDto> toListCommentDto (List<Comment> comments) {
-            return comments.stream().map(ItemMapper::toCommentDto).collect(Collectors.toList());
-        }
-        public static Item toItem(ItemDto itemDto) {
-            return new Item (
-                    itemDto.getId(),
-                    itemDto.getName(),
-                    itemDto.getDescription(),
-                    itemDto.getAvailable()
-            );
-        }
-
-        public static List<ItemDto> toListItemDto (List<Item> item) {
-            return item.stream().map(ItemMapper::toItemDto).collect(Collectors.toList());
-        }
-
-        public static ItemDtoOut toItemDtoOut(Item item) {
-            return new ItemDtoOut(
-                    item.getId(),
-                    item.getName(),
-                    item.getDescription(),
-                    item.getAvailable());
-        }
-
-        public static List<CommentDto> toListItemDtoLastNext(List<Comment> comments) {
-            return comments.stream().map(ItemMapper::toCommentDto).collect(Collectors.toList());
-        }
-
-        public static Comment toComment(CommentDto commentDto) {
-            return new Comment (
-                    commentDto.getId(),
-                    commentDto.getText()
-            );
-        }
-        public static CommentDto toCommentDto(Comment comment) {
-            return new CommentDto (
-                    comment.getId(),
-                    comment.getText(),
-                    toItemDto(comment.getItem()),
-                    comment.getAuthor().getName(),
-                    comment.getCreationTime()
-            );
-        }
+    public static ItemDto toItemDto(Item item) {
+        return new ItemDto(
+                item.getId(),
+                item.getName(),
+                item.getDescription(),
+                item.getAvailable(),
+                UserMapper.toUserDto(item.getOwner()),
+                item.getRequest() != null ? item.getRequest().getId() : item.getId()
+        );
     }
+
+    public static List<CommentDto> toListCommentDto(List<Comment> comments) {
+        return comments.stream().map(ItemMapper::toCommentDto).collect(Collectors.toList());
+    }
+
+    public static Item toItem(ItemDto itemDto) {
+        return new Item(
+                itemDto.getId(),
+                itemDto.getName(),
+                itemDto.getDescription(),
+                itemDto.getAvailable()
+        );
+    }
+
+    public static List<ItemDto> toListItemDto(List<Item> item) {
+        return item.stream().map(ItemMapper::toItemDto).collect(Collectors.toList());
+    }
+
+    public static ItemDtoOut toItemDtoOut(Item item) {
+        return new ItemDtoOut(
+                item.getId(),
+                item.getName(),
+                item.getDescription(),
+                item.getAvailable());
+    }
+
+    public static List<CommentDto> toListItemDtoLastNext(List<Comment> comments) {
+        return comments.stream().map(ItemMapper::toCommentDto).collect(Collectors.toList());
+    }
+
+    public static Comment toComment(CommentDto commentDto) {
+        return new Comment(
+                commentDto.getId(),
+                commentDto.getText()
+        );
+    }
+
+    public static CommentDto toCommentDto(Comment comment) {
+        return new CommentDto(
+                comment.getId(),
+                comment.getText(),
+                toItemDto(comment.getItem()),
+                comment.getAuthor().getName(),
+                comment.getCreationTime()
+        );
+    }
+}

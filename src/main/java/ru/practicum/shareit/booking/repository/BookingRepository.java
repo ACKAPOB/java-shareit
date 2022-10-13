@@ -10,9 +10,10 @@ import java.util.Optional;
 
 public interface BookingRepository extends JpaRepository<Booking, Long> {
     Optional<List<Booking>> findByItem_Id(Long ItemId);
+
     Optional<List<Booking>> findByItem_IdAndBooker_id(Long aLong, Long aLong1);
 
-    List <Booking> findBookingsByBookerIdOrderByStartDesc(Long userId);
+    List<Booking> findBookingsByBookerIdOrderByStartDesc(Long userId);
 
     @Query("select b from Booking b where b.booker.id = ?1 and ?2 between b.start and b.end order by b.start desc")
     List<Booking> findByBookingsListStateCurrent(Long idUser, LocalDateTime time);

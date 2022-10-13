@@ -15,10 +15,11 @@ import java.time.LocalDateTime;
 @Entity
 @Table(name = "bookings")
 public class Booking {
-    public  Booking(LocalDateTime start, LocalDateTime end) {
+    public Booking(LocalDateTime start, LocalDateTime end) {
         this.start = start;
         this.end = end;
     }
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -26,13 +27,13 @@ public class Booking {
     private LocalDateTime start;
     @Column(name = "end_date", nullable = false)
     private LocalDateTime end;
-    @ManyToOne(fetch=FetchType.EAGER,
-            cascade=CascadeType.ALL)
-    @JoinColumn(name="item_id")
+    @ManyToOne(fetch = FetchType.EAGER,
+            cascade = CascadeType.ALL)
+    @JoinColumn(name = "item_id")
     private Item item;
-    @ManyToOne(fetch=FetchType.EAGER,
-            cascade=CascadeType.ALL)
-    @JoinColumn(name="booker_id")
+    @ManyToOne(fetch = FetchType.EAGER,
+            cascade = CascadeType.ALL)
+    @JoinColumn(name = "booker_id")
     private User booker;
     @Enumerated(EnumType.STRING)
     private Status status;

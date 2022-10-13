@@ -36,8 +36,8 @@ public class ItemServiceImpl implements ItemService {
     private final ItemRequestRepository itemRequestRepository;
 
     @Autowired
-    public ItemServiceImpl (ItemRepository itemRepository, UserRepository userRepository,
-                            CommentRepository commentRepository, BookingRepository bookingRepository, ItemRequestRepository itemRequestRepository){
+    public ItemServiceImpl(ItemRepository itemRepository, UserRepository userRepository,
+                           CommentRepository commentRepository, BookingRepository bookingRepository, ItemRequestRepository itemRequestRepository) {
         this.repository = itemRepository;
         this.userRepository = userRepository;
         this.commentRepository = commentRepository;
@@ -50,13 +50,14 @@ public class ItemServiceImpl implements ItemService {
     public ItemDto createItem(Optional<Long> userId, ItemDto itemDto) {
         validationUser(userId);
         Item item = ItemMapper.toItem(itemDto);
-        if (itemDto.getRequestId() != null) item.setRequest(itemRequestRepository.findById(itemDto.getRequestId()).get());
+        if (itemDto.getRequestId() != null)
+            item.setRequest(itemRequestRepository.findById(itemDto.getRequestId()).get());
         if (item.getName() == null || Objects.equals(item.getName(), ""))
             throw new BadRequestException("Ошибка данных, ItemServiceImpl.createItem, item.getName");
         if (item.getDescription() == null || Objects.equals(item.getDescription(), ""))
-            throw new BadRequestException ("Ошибка данных, ItemServiceImpl.createItem, item.getDescription");
+            throw new BadRequestException("Ошибка данных, ItemServiceImpl.createItem, item.getDescription");
         if (item.getAvailable() == null)
-            throw new BadRequestException ("Ошибка данных, ItemServiceImpl.createItem, item.getAvailable");
+            throw new BadRequestException("Ошибка данных, ItemServiceImpl.createItem, item.getAvailable");
         item.setOwner(userRepository.findById(userId.get()).get());
         repository.save(item);
         log.info("Создание Item ItemServiceImpl.createItem, userId = {}, item = {}", userId, item);
@@ -65,7 +66,7 @@ public class ItemServiceImpl implements ItemService {
 
     @Override
     @Transactional
-    public ItemDto updateItem(Optional<Long> userId, ItemDto itemDto, Optional<Long> id){
+    public ItemDto updateItem(Optional<Long> userId, ItemDto itemDto, Optional<Long> id) {
         Item item = ItemMapper.toItem(itemDto);
         if (id.isEmpty())
             throw new NotFoundException("Ошибка отсутствует id Item, ItemServiceImpl.updateItem");
@@ -84,7 +85,7 @@ public class ItemServiceImpl implements ItemService {
 
     @Override
     @Transactional
-    public ItemDto deleteItem(Optional<Long> userId, Optional<Long> id){
+    public ItemDto deleteItem(Optional<Long> userId, Optional<Long> id) {
         validationUser(userId);
         if (id.isPresent()) {
             Item item = repository.findById(id.get()).get();
@@ -109,7 +110,7 @@ public class ItemServiceImpl implements ItemService {
         for (Item item : listItem) {
             list.add(findLastNextBooking(item));
         }
-        log.info("Поиск всех Item ItemServiceImpl.getAllItemsOwner, userId = {}, list = {}",userId, list);
+        log.info("Поиск всех Item ItemServiceImpl.getAllItemsOwner, userId = {}, list = {}", userId, list);
         return list;
     }
 
@@ -130,7 +131,7 @@ public class ItemServiceImpl implements ItemService {
         return itemDto;
     }
 
-    public ItemDtoOut findLastNextBooking (Item item) {
+    public ItemDtoOut findLastNextBooking(Item item) {
         ItemDtoOut itemDtoOut = ItemMapper.toItemDtoOut(item);
         Optional<List<Booking>> listBooking = bookingRepository.findByItem_Id(item.getId());
         if ((listBooking.get().size() - 1) >= 0) {
@@ -147,7 +148,7 @@ public class ItemServiceImpl implements ItemService {
     }
 
     @Override
-    public List<ItemDto> getItemByIdSearch (Optional<Long> userId, String text) {
+    public List<ItemDto> getItemByIdSearch(Optional<Long> userId, String text) {
         validationUser(userId);
         if (text == null || text.length() == 0) return Collections.emptyList();
         List<Item> listItem = repository.searchListItem(text);
@@ -158,7 +159,7 @@ public class ItemServiceImpl implements ItemService {
         return ItemMapper.toListItemDto(listItem);
     }
 
-    public Optional<User> validationUser (Optional<Long> userId){
+    public Optional<User> validationUser(Optional<Long> userId) {
         if (userId.isEmpty()) {
             throw new BadRequestException("Ошибка userId, ItemServiceImpl.validationUser()");
         }
@@ -169,7 +170,7 @@ public class ItemServiceImpl implements ItemService {
         return user;
     }
 
-    public Optional<Item> validationItem (Optional<Long> id) {
+    public Optional<Item> validationItem(Optional<Long> id) {
         if (id.isEmpty()) {
             System.out.println("PRINT ID " + id);
             throw new BadRequestException("Ошибка id, ItemServiceImpl.validationItem()");
@@ -180,6 +181,7 @@ public class ItemServiceImpl implements ItemService {
         log.info("Проверка item, ItemServiceImpl.validationUser, Item = {},", item);
         return item;
     }
+
     @Override
     @Transactional
     public CommentDto createComment(Optional<Long> userId, Optional<Long> id, CommentDto commentDto) {
@@ -187,12 +189,12 @@ public class ItemServiceImpl implements ItemService {
             throw new BadRequestException("Ошибка Comment - isEmpty, ItemServiceImpl.createComment");
         Optional<User> user = validationUser(userId);
         Optional<Item> item = validationItem(id);
-        Optional<List<Booking>> bookings= bookingRepository.findByItem_IdAndBooker_id(id.get(), userId.get());
+        Optional<List<Booking>> bookings = bookingRepository.findByItem_IdAndBooker_id(id.get(), userId.get());
         if (bookings.isEmpty())
             throw new BadRequestException("Ошибка bookings - isEmpty, ItemServiceImpl.createComment");
         LocalDateTime time = LocalDateTime.now();
         int count = 0;
-        for (Booking booking: bookings.get()) {
+        for (Booking booking : bookings.get()) {
             if (booking.getStart().isAfter(time)) ++count;
         }
         if ((bookings.get().size()) == count)

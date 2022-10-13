@@ -13,6 +13,7 @@ public interface ItemRequestRepository extends JpaRepository<ItemRequest, Long> 
 
     @Query("select i from ItemRequest i where i.id = ?1")
     Optional<ItemRequest> findById(Long id);
+
     List<ItemRequest> findByRequestorIdOrderByCreatedDesc(Long idUser);
 
     @Query("SELECT i FROM ItemRequest i "

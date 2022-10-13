@@ -21,6 +21,7 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class ItemController {
     ItemService itemService;
+
     @Autowired
     public ItemController(ItemService itemService) {
         this.itemService = itemService;
@@ -38,19 +39,17 @@ public class ItemController {
                                  @PathVariable Optional<Long> id,
                                  @RequestBody ItemDto itemDto) {
         log.info("Обновление Item ItemController.updateItem, userId = {}, itemid = {}, itemDto = {}", userId, id, itemDto);
-        return itemService.updateItem (userId, itemDto, id);
+        return itemService.updateItem(userId, itemDto, id);
     }
 
     @DeleteMapping("/{id}")
     protected ItemDto deleteItem(@RequestHeader("X-Sharer-User-Id") Optional<Long> userId,
-                                 @PathVariable Optional<Long> id){
+                                 @PathVariable Optional<Long> id) {
         log.info("Удаление Item ItemController.updateItem, userId = {}, itemid = {}", userId, id);
         return itemService.deleteItem(userId, id);
     }
-
-
     @GetMapping()
-    protected List<ItemDtoOut> getAllItemsOwner(@RequestHeader("X-Sharer-User-Id") Optional<Long> userId){
+    protected List<ItemDtoOut> getAllItemsOwner(@RequestHeader("X-Sharer-User-Id") Optional<Long> userId) {
         log.info("Поиск всех Item ItemController.getAllItemsOwner, userId = {}", userId);
         return itemService.getAllItemsOwner(userId);
     }
@@ -63,12 +62,6 @@ public class ItemController {
     }
 
 
-
-
-
-
-
-
     @GetMapping("/search")
     protected List<ItemDto> getItemByIdSearch(
             @RequestHeader("X-Sharer-User-Id") Optional<Long> userId,
@@ -79,8 +72,8 @@ public class ItemController {
 
     @PostMapping("/{itemId}/comment")
     protected CommentDto createComment(@Valid @RequestHeader("X-Sharer-User-Id") Optional<Long> userId,
-                                @PathVariable Optional<Long> itemId,
-                                @RequestBody CommentDto commentDto) {
+                                       @PathVariable Optional<Long> itemId,
+                                       @RequestBody CommentDto commentDto) {
         log.info("Создание Сomment ItemController.createComment, userId = {}, itemid = {}, commentDto = {}", userId, itemId, commentDto);
         return itemService.createComment(userId, itemId, commentDto);
     }

@@ -90,6 +90,7 @@ public class BookingServiceImpl implements BookingService {
         }
         throw new BookingNotFoundException("Ошибка, BookingServiceImpl.getBookingById");
     }
+
     @Override
     public List<BookingDtoOut> getBookingsState(Optional<Long> userId, String state)
             throws BadRequestException, MessageFailedException {
@@ -116,45 +117,48 @@ public class BookingServiceImpl implements BookingService {
             case "REJECTED":
                 log.info("Получение REJECTED Bookings BookingServiceImpl.getBookingsState, userId = {} ", userId);
                 return BookingMapper.toListBookingDto(bookingRepository.findByBookingsListStateRejected(userId.get()));
-            default: throw new MessageFailedException();
+            default:
+                throw new MessageFailedException();
         }
     }
 
     @Override
     public List<BookingDtoOut> getBookingsOwnerState(Optional<Long> userId, String state) throws
-        MessageFailedException {
-            User user = validationUser(userId);
+            MessageFailedException {
+        User user = validationUser(userId);
 
-            switch (state) {
-                case "ALL":
-                    log.info("Получение ALL Bookings BookingServiceImpl.getBookingsOwnerState, ownerId = {} ", userId);
-                    return BookingMapper.toListBookingDto(bookingRepository.
-                            findByBookingsOwnerListStateAll(userId.get()));
-                case "CURRENT":
-                    log.info("Получение CURRENT Bookings BookingServiceImpl.getBookingsOwnerState, ownerId = {} ", userId);
-                    return BookingMapper.toListBookingDto(bookingRepository.
-                            findByBookingsOwnerListStateCurrent(userId.get(), LocalDateTime.now()));
-                case "PAST":
-                    log.info("Получение PAST Bookings BookingServiceImpl.getBookingsOwnerState, ownerId = {} ", userId);
-                    return BookingMapper.toListBookingDto(bookingRepository.
-                            findByBookingsOwnerListStatePast(userId.get(), LocalDateTime.now()));
-                case "FUTURE":
-                    log.info("Получение FUTURE Bookings BookingServiceImpl.getBookingsOwnerState, ownerId = {} ", userId);
-                    return BookingMapper.toListBookingDto(bookingRepository.
-                            findByBookingsOwnerListStateFuture(userId.get()));
-                case "WAITING":
-                    log.info("Получение WAITING Bookings BookingServiceImpl.getBookingsOwnerState, ownerId = {} ", userId);
-                    return BookingMapper.toListBookingDto(bookingRepository.
-                            findByBookingsOwnerListStateWaiting(userId.get()));
-                case "REJECTED":
-                    log.info("Получение REJECTED Bookings BookingServiceImpl.getBookingsOwnerState, ownerId = {} ", userId);
-                    return BookingMapper.toListBookingDto(bookingRepository.
-                            findByBookingsOwnerListStateRejected(userId.get()));
-                default: throw new MessageFailedException();
-            }
+        switch (state) {
+            case "ALL":
+                log.info("Получение ALL Bookings BookingServiceImpl.getBookingsOwnerState, ownerId = {} ", userId);
+                return BookingMapper.toListBookingDto(bookingRepository.
+                        findByBookingsOwnerListStateAll(userId.get()));
+            case "CURRENT":
+                log.info("Получение CURRENT Bookings BookingServiceImpl.getBookingsOwnerState, ownerId = {} ", userId);
+                return BookingMapper.toListBookingDto(bookingRepository.
+                        findByBookingsOwnerListStateCurrent(userId.get(), LocalDateTime.now()));
+            case "PAST":
+                log.info("Получение PAST Bookings BookingServiceImpl.getBookingsOwnerState, ownerId = {} ", userId);
+                return BookingMapper.toListBookingDto(bookingRepository.
+                        findByBookingsOwnerListStatePast(userId.get(), LocalDateTime.now()));
+            case "FUTURE":
+                log.info("Получение FUTURE Bookings BookingServiceImpl.getBookingsOwnerState, ownerId = {} ", userId);
+                return BookingMapper.toListBookingDto(bookingRepository.
+                        findByBookingsOwnerListStateFuture(userId.get()));
+            case "WAITING":
+                log.info("Получение WAITING Bookings BookingServiceImpl.getBookingsOwnerState, ownerId = {} ", userId);
+                return BookingMapper.toListBookingDto(bookingRepository.
+                        findByBookingsOwnerListStateWaiting(userId.get()));
+            case "REJECTED":
+                log.info("Получение REJECTED Bookings BookingServiceImpl.getBookingsOwnerState, ownerId = {} ", userId);
+                return BookingMapper.toListBookingDto(bookingRepository.
+                        findByBookingsOwnerListStateRejected(userId.get()));
+            default:
+                throw new MessageFailedException();
         }
-        public User validationUser (Optional<Long> userId) {
-            if (userId.isEmpty()) {
+    }
+
+    public User validationUser(Optional<Long> userId) {
+        if (userId.isEmpty()) {
             throw new BadRequestException("Ошибка userId.isEmpty, BookingServiceImpl.validationUser()");
         }
         log.info("Проверка User BookingServiceImpl.validationUser, userId = {}", userId);
@@ -162,7 +166,7 @@ public class BookingServiceImpl implements BookingService {
                 orElseThrow(() -> new BookingNotFoundException("Ошибка user не найден, createBooking.updateStatus"));
     }
 
-    public Item validationItem (Optional<BookingDtoIn> bookingDtoIn) {
+    public Item validationItem(Optional<BookingDtoIn> bookingDtoIn) {
         if (bookingDtoIn.isEmpty()) {
             throw new BookingNotFoundException("Ошибка bookingDtoIn.isEmpty, BookingServiceImpl.validationItem()");
         }
@@ -173,7 +177,7 @@ public class BookingServiceImpl implements BookingService {
         return item.get();
     }
 
-    public Booking validationBooking (Optional<Long> bookingId)  {
+    public Booking validationBooking(Optional<Long> bookingId) {
         if (bookingId.isEmpty()) {
             throw new BadRequestException("Ошибка bookingId.isEmpty, BookingServiceImpl.validationBooking()");
         }
@@ -182,6 +186,6 @@ public class BookingServiceImpl implements BookingService {
             throw new BookingNotFoundException("Ошибка booking.isEmpty, BookingServiceImpl.validationBooking()");
         }
         log.info("Проверка Booking BookingServiceImpl.validationBooking, booking = {}", booking);
-        return booking.get() ;
+        return booking.get();
     }
 }

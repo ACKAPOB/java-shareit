@@ -14,12 +14,13 @@ import java.util.List;
 @Data
 public class ItemDtoOut {
 
-    public ItemDtoOut(Long id, String name, String description, Boolean available){
+    public ItemDtoOut(Long id, String name, String description, Boolean available) {
         this.id = id;
         this.name = name;
         this.description = description;
         this.available = available;
     }
+
     private Long id;
     private String name;
     private String description;

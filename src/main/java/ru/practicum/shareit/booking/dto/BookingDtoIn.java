@@ -17,5 +17,4 @@ public class BookingDtoIn {
     private LocalDateTime start;
     @NotBlank
     private LocalDateTime end;
-
 }
