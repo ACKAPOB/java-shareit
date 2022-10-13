@@ -90,7 +90,6 @@ public class BookingServiceImpl implements BookingService {
         }
         throw new BookingNotFoundException("Ошибка, BookingServiceImpl.getBookingById");
     }
-
     @Override
     public List<BookingDtoOut> getBookingsState(Optional<Long> userId, String state)
             throws BadRequestException, MessageFailedException {
