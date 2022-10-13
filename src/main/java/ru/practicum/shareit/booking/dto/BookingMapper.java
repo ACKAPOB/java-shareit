@@ -29,7 +29,8 @@ public class BookingMapper {
                 booking.getId(),
                 booking.getBooker().getId(),
                 booking.getStart(),
-                booking.getEnd()
+                booking.getEnd(),
+                booking.getStatus()
         );
     }
 
@@ -38,7 +39,8 @@ public class BookingMapper {
                 booking.getId(),
                 booking.getBooker().getId(),
                 booking.getStart(),
-                booking.getEnd()
+                booking.getEnd(),
+                booking.getStatus()
         );
     }
 
