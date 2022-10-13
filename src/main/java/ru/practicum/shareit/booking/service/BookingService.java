@@ -13,7 +13,7 @@ import java.util.Optional;
 public interface BookingService {
 
     @Transactional
-    BookingDtoById createBooking(Optional<Long> userId, Optional<BookingDtoIn> bookingDtoIn);
+    BookingDtoOut createBooking(Optional<Long> userId, Optional<BookingDtoIn> bookingDtoIn);
 
     BookingDtoOut updateStatus(Optional<Long> userId, Optional<Long> bookingId, Boolean approved);
 

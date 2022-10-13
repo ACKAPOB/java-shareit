@@ -27,7 +27,7 @@ public class BookingController {
     }
 
     @PostMapping()
-    protected BookingDtoById createBooking(@Valid @RequestHeader("X-Sharer-User-Id") Optional<Long> userId,
+    protected BookingDtoOut createBooking(@Valid @RequestHeader("X-Sharer-User-Id") Optional<Long> userId,
                                            @RequestBody Optional<BookingDtoIn> bookingDtoIn) {
         log.info("Создание Booking BookingController.createBooking, userId = {}", userId);
         return bookingService.createBooking(userId, bookingDtoIn);
