@@ -48,6 +48,7 @@ public class ItemController {
         log.info("Удаление Item ItemController.updateItem, userId = {}, itemid = {}", userId, id);
         return itemService.deleteItem(userId, id);
     }
+
     @GetMapping()
     protected List<ItemDtoOut> getAllItemsOwner(@RequestHeader("X-Sharer-User-Id") Optional<Long> userId) {
         log.info("Поиск всех Item ItemController.getAllItemsOwner, userId = {}", userId);

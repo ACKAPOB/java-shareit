@@ -2,7 +2,6 @@ package ru.practicum.shareit.requests.service;
 
 import ru.practicum.shareit.requests.dto.ItemRequestDto;
 
-import javax.validation.ValidationException;
 import java.util.List;
 import java.util.Optional;
 
