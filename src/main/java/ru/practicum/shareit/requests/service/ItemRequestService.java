@@ -6,12 +6,9 @@ import java.util.List;
 import java.util.Optional;
 
 public interface ItemRequestService {
-    List<ItemRequestDto> getAllItemRequest(Optional<Long> userId);
+    List<ItemRequestDto> getAllItemRequest(Long userId);
 
-    ItemRequestDto createItemRequest(Optional<Long> userId, ItemRequestDto itemRequestDto);
+    ItemRequestDto createItemRequest(Long userId, ItemRequestDto itemRequestDto);
 
-
-    List<ItemRequestDto> getItemRequestPageable(Optional<Long> userId, Optional<Integer> from, Optional<Integer> size);
-
-    ItemRequestDto getItemRequestById(Optional<Long> userId, Optional<Long> id);
+    ItemRequestDto getItemRequestById(Long userId, Long id);
 }

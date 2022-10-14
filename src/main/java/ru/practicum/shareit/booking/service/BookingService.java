@@ -11,7 +11,6 @@ import java.util.Optional;
 
 public interface BookingService {
 
-    @Transactional
     BookingDtoOut createBooking(Optional<Long> userId, Optional<BookingDtoIn> bookingDtoIn);
 
     BookingDtoOut updateStatus(Optional<Long> userId, Optional<Long> bookingId, Boolean approved);

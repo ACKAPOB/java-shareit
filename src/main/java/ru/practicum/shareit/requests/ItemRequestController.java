@@ -33,27 +33,19 @@ public class ItemRequestController {
     protected ItemRequestDto createItemRequest(@RequestHeader("X-Sharer-User-Id") Optional<Long> userId,
                                                @Valid @RequestBody ItemRequestDto itemRequestDto) {
         log.info("Создание Request, ItemRequestController.createItemRequest, userId = {}", userId);
-        return itemRequestService.createItemRequest(userId, itemRequestDto);
+        return itemRequestService.createItemRequest(userId.get(), itemRequestDto);
     }
 
     @GetMapping()
     protected List<ItemRequestDto> getAllRequest(@RequestHeader("X-Sharer-User-Id") Optional<Long> userId) {
         log.info("Получение Requests, ItemRequestController.getAllRequest, userId = {}", userId);
-        return itemRequestService.getAllItemRequest(userId);
-    }
-
-    @GetMapping("/all")
-    protected List<ItemRequestDto> getItemRequest(@RequestHeader("X-Sharer-User-Id") Optional<Long> userId,
-                                                  @RequestParam(value = "from", required = false) Optional<Integer> from,
-                                                  @RequestParam(value = "size", required = false) Optional<Integer> size) {
-        log.info("Получение Requests, ItemRequestController.getItemRequest, userId = {}", userId);
-        return itemRequestService.getItemRequestPageable(userId, from, size);
+        return itemRequestService.getAllItemRequest(userId.get());
     }
 
     @GetMapping("/{requestId}")
     protected ItemRequestDto getItemRequest(@RequestHeader("X-Sharer-User-Id") Optional<Long> userId,
                                             @PathVariable Optional<Long> requestId) throws ValidationException {
-        return itemRequestService.getItemRequestById(userId, requestId);
+        return itemRequestService.getItemRequestById(userId.get(), requestId.get());
     }
 
 }

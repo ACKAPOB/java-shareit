@@ -11,7 +11,6 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @NoArgsConstructor
-@Component
 public class ItemMapper {
 
     public static ItemDto toItemDto(Item item) {
