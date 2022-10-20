@@ -1,10 +1,12 @@
 package ru.practicum.shareit.item.dto;
 
 import lombok.*;
-import ru.practicum.shareit.user.Create;
+import ru.practicum.shareit.comment.dto.CommentDto;
+import ru.practicum.shareit.user.dto.UserDto;
 
 import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotNull;
+
+import java.util.List;
 
 /**
  * TODO Sprint add-controllers.
@@ -14,20 +16,23 @@ import javax.validation.constraints.NotNull;
 @Data
 public class ItemDto {
 
+    public ItemDto(Long id, String name, String description, Boolean available, UserDto owner, Long requestId) {
+        this.id = id;
+        this.name = name;
+        this.description = description;
+        this.available = available;
+        this.owner = owner;
+        this.requestId = requestId;
+    }
+
     private Long id;
-
-    @NotBlank(groups = {Create.class}, message = "Name cannot be empty or null")
+    @NotBlank
     private String name;
-
-    @NotBlank(groups = {Create.class}, message = "Description cannot be empty or null")
-    private String description; //максимальная длина описания — 200 символов;
-
-    @NotNull(groups = {Create.class}, message = "Available cannot be null")
-    private Boolean available; //статус о том, доступна или нет вещь для аренды
-
-    @NotNull(groups = {Create.class}, message = "Owner cannot be null")
-    private long owner; //владелец вещи
-
-    private Long request; //если вещь была создана по запросу другого пользователя, то в этом поле будет храниться ссылка на соответствующий запрос
-
+    @NotBlank
+    private String description;
+    @NotBlank
+    private Boolean available;
+    private UserDto owner;
+    private List<CommentDto> comments;
+    private Long requestId;
 }

@@ -18,7 +18,7 @@ public class UserDto {
     @NotBlank(groups = {Create.class}, message = "Name cannot be empty or null")
     private String name;
 
-    @NotNull(groups = {Create.class},message = "Email cannot be null")
+    @NotNull(groups = {Create.class}, message = "Email cannot be null")
     @Email(groups = {Create.class, Update.class}, message = "Email is mandatory")
     private String email;
 }

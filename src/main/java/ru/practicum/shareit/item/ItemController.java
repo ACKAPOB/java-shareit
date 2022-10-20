@@ -2,14 +2,15 @@ package ru.practicum.shareit.item;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.validation.annotation.Validated;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
-import ru.practicum.shareit.item.dto.ItemDto;
+import ru.practicum.shareit.comment.dto.CommentDto;
+import ru.practicum.shareit.item.dto.*;
 import ru.practicum.shareit.item.service.ItemService;
-import ru.practicum.shareit.user.Create;
-import ru.practicum.shareit.user.Update;
 
+import javax.validation.Valid;
 import java.util.List;
+import java.util.Optional;
 
 /**
  * TODO Sprint add-controllers.
@@ -19,41 +20,62 @@ import java.util.List;
 @Slf4j
 @RequiredArgsConstructor
 public class ItemController {
+    ItemService itemService;
 
-    private final ItemService itemService;
+    @Autowired
+    public ItemController(ItemService itemService) {
+        this.itemService = itemService;
+    }
 
     @PostMapping()
-    ItemDto createItem(@RequestHeader("X-Sharer-User-Id") long userId,
-                       @Validated({Create.class}) @RequestBody ItemDto itemDto) {
-        log.info("Post itemDto Name = {}", itemDto.getName());
-        return itemService.createItem(itemDto, userId);
+    protected ItemDto createItem(@Valid @RequestHeader("X-Sharer-User-Id") Optional<Long> userId,
+                                 @RequestBody ItemDto itemDto) {
+        log.info("Создание Item ItemController.updateItem, userId = {}", userId);
+        return itemService.createItem(userId, itemDto);
     }
 
-    @PatchMapping("/{itemId}")
-    ItemDto updateItem(@RequestHeader("X-Sharer-User-Id") long userId,
-                              @PathVariable long itemId,
-                              @Validated({Update.class}) @RequestBody ItemDto itemDto) {
-        log.info("Put itemDto Name = {}", itemDto + " /userId " + userId + " /itemId " + itemId);
-        return itemService.updateItem(itemDto, itemId, userId);
+    @PatchMapping("/{id}")
+    protected ItemDto updateItem(@RequestHeader("X-Sharer-User-Id") Optional<Long> userId,
+                                 @PathVariable Optional<Long> id,
+                                 @RequestBody ItemDto itemDto) {
+        log.info("Обновление Item ItemController.updateItem, userId = {}, itemid = {}, itemDto = {}", userId, id, itemDto);
+        return itemService.updateItem(userId, itemDto, id);
     }
 
-    @GetMapping("/{id}")
-    public ItemDto getItem(@PathVariable long id) {
-        log.info("Get item id = {} ", id);
-        return itemService.getItem(id);
+    @DeleteMapping("/{id}")
+    protected ItemDto deleteItem(@RequestHeader("X-Sharer-User-Id") Optional<Long> userId,
+                                 @PathVariable Optional<Long> id) {
+        log.info("Удаление Item ItemController.updateItem, userId = {}, itemid = {}", userId, id);
+        return itemService.deleteItem(userId, id);
     }
 
     @GetMapping()
-    public List<ItemDto> getItems(@RequestHeader("X-Sharer-User-Id") long userId) {
-        log.info("Get items");
-        return itemService.getItems(userId);
+    protected List<ItemDtoOut> getAllItemsOwner(@RequestHeader("X-Sharer-User-Id") Optional<Long> userId) {
+        log.info("Поиск всех Item ItemController.getAllItemsOwner, userId = {}", userId);
+        return itemService.getAllItemsOwner(userId);
     }
+
+    @GetMapping("/{id}")
+    protected ItemDtoOut getItemById(@RequestHeader("X-Sharer-User-Id") Optional<Long> userId,
+                                     @PathVariable Optional<Long> id) {
+        log.info("Поиск Item ItemController.getItemById, userId = {}, itemid = {}", userId, id);
+        return itemService.getItemById(userId, id);
+    }
+
 
     @GetMapping("/search")
-    public List<ItemDto> searchItems(@RequestHeader("X-Sharer-User-Id") long userId, @RequestParam String text) {
-        log.info("search items");
-        return itemService.searchItems(text);
+    protected List<ItemDto> getItemByIdSearch(
+            @RequestHeader("X-Sharer-User-Id") Optional<Long> userId,
+            @RequestParam("text") String text) {
+        log.info("Поиск всех Item ItemController.getAllItems, userId = {}, text = {}", userId, text);
+        return itemService.getItemByIdSearch(userId, text);
     }
 
-
+    @PostMapping("/{itemId}/comment")
+    protected CommentDto createComment(@Valid @RequestHeader("X-Sharer-User-Id") Optional<Long> userId,
+                                       @PathVariable Optional<Long> itemId,
+                                       @RequestBody CommentDto commentDto) {
+        log.info("Создание Сomment ItemController.createComment, userId = {}, itemid = {}, commentDto = {}", userId, itemId, commentDto);
+        return itemService.createComment(userId, itemId, commentDto);
+    }
 }
