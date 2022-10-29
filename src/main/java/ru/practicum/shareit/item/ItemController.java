@@ -52,8 +52,7 @@ public class ItemController {
     @GetMapping()
     protected List<ItemDtoOut> getAllItemsOwner(@RequestHeader("X-Sharer-User-Id") Optional<Long> userId,
                                                 @RequestParam(value = "from", required = false) Optional<Integer> from,
-                                                @RequestParam(value = "size", required = false) Optional<Integer> size)
-    {
+                                                @RequestParam(value = "size", required = false) Optional<Integer> size) {
         log.info("Поиск всех Item ItemController.getAllItemsOwner, userId = {}", userId);
         return itemService.getAllItemsOwner(userId, from, size);
     }

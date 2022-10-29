@@ -61,7 +61,7 @@
         }
 
         @Test
-        void deleteWrongUserTest(){
+        void deleteWrongUserTest() {
             Mockito
                     .when(userRepository.findById(1L)).thenReturn(Optional.ofNullable(user));
             Assertions.assertThrows(NoSuchElementException.class, () -> userService.deleteUser(2L));
