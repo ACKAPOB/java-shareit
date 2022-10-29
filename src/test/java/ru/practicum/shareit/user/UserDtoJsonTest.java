@@ -21,6 +21,6 @@
             JsonContent<UserDto> result = jsonUserDto.write(userDto);
             assertThat(result).extractingJsonPathNumberValue("$.id").isEqualTo(1);
             assertThat(result).extractingJsonPathStringValue("$.name").isEqualTo("user1");
-            assertThat(result).extractingJsonPathStringValue("$.email").isEqualTo("user1@mail.com");
+            assertThat(result).extractingJsonPathStringValue("$.email").isEqualTo("user@mail.com");
         }
     }
