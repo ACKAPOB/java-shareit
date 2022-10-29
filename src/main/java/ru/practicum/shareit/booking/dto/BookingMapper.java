@@ -23,17 +23,7 @@ public class BookingMapper {
 
         );
     }
-/*
-    public static BookingDtoById toBookingDtoById(Booking booking) {
-        return new BookingDtoById(
-                booking.getId(),
-                booking.getBooker().getId(),
-                booking.getStart(),
-                booking.getEnd(),
-                booking.getStatus()
-        );
-    }
-*/
+
     public static BookingDtoById toBookingDtoByIdTime(Booking booking) {
         return new BookingDtoById(
                 booking.getId(),

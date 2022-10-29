@@ -101,11 +101,12 @@ public class ItemServiceImplTest {
         Mockito
                 .when(itemRepository.save(item))
                 .thenReturn(item);
-        ItemDto itemDtoTest = itemService.createItem (Optional.of(1L), itemDto);
+        ItemDto itemDtoTest = itemService.createItem(Optional.of(1L), itemDto);
         Assertions.assertEquals(1L, itemDtoTest.getId());
         Assertions.assertEquals("item", itemDtoTest.getName());
         Assertions.assertEquals("user1", itemDtoTest.getOwner().getName());
     }
+
     @Test
     void saveItemWithoutNameTest() {
         Mockito
@@ -157,8 +158,8 @@ public class ItemServiceImplTest {
                 .when(itemRepository.findById(1L))
                 .thenReturn(Optional.ofNullable(item));
         Mockito
-                .when(commentRepository.findByItemId(1L)).
-                thenReturn(List.of(new Comment(1L, item, user,"text", LocalDateTime.now())));
+                .when(commentRepository.findByItemId(1L))
+                .thenReturn(List.of(new Comment(1L, item, user,"text", LocalDateTime.now())));
         Mockito
                 .when(bookingRepository.findByItem_Id(1L)).thenReturn(Optional.of(list));
         ItemDtoOut itemTest = itemService.getItemById(Optional.of(1L), Optional.of(1L));
@@ -174,7 +175,7 @@ public class ItemServiceImplTest {
     }
 
     @Test
-    void GetItemWrongNullTest() {
+    void getItemWrongNullTest() {
         Mockito
                 .when(userRepository.findById(1L)).thenReturn(Optional.of(user));
         Mockito
@@ -183,7 +184,7 @@ public class ItemServiceImplTest {
     }
 
     @Test
-    void GetItemWrongIdTest() {
+    void getItemWrongIdTest() {
         Mockito
                 .when(userRepository.findById(1L)).thenReturn(Optional.of(user));
         Mockito

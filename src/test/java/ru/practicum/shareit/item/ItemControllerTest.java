@@ -65,7 +65,7 @@
         }
 
         @Test
-        void createItemTest() throws Exception{
+        void createItemTest() throws Exception {
             when(itemService.createItem(any(), any()))
                     .thenReturn(itemDto);
             mvc.perform(post("/items")
@@ -78,7 +78,7 @@
         }
 
         @Test
-        void getItemByIdTest() throws Exception{
+        void getItemByIdTest() throws Exception {
             when(itemService.getItemById(any(), any()))
                     .thenReturn(itemDtoLastNext);
             mvc.perform(get("/items/2")
@@ -90,7 +90,7 @@
         }
 
         @Test
-        void deleteItemTest() throws Exception{
+        void deleteItemTest() throws Exception {
             when(itemService.deleteItem(any(), any()))
                     .thenReturn(itemDto);
             mvc.perform(delete("/items/1")
@@ -102,7 +102,7 @@
         }
 
         @Test
-        void findAllItemsTest() throws Exception{
+        void findAllItemsTest() throws Exception {
             when(itemService.getAllItemsOwner(any(), any(), any()))
                     .thenReturn(lastNextList);
             mvc.perform(get("/items")
@@ -114,7 +114,7 @@
         }
 
         @Test
-        void findItemByIdSearchTest() throws Exception{
+        void findItemByIdSearchTest() throws Exception {
             when(itemService.getItemByIdSearch(any(), any(), any(), any()))
                     .thenReturn(list);
             mvc.perform(get("/items/search")
@@ -127,7 +127,7 @@
         }
 
         @Test
-        void putTest() throws Exception{
+        void putTest() throws Exception {
             when(itemService.updateItem(any(), any(), any()))
                     .thenReturn(itemDto);
             mvc.perform(patch("/items/1")

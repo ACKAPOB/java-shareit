@@ -108,8 +108,7 @@ public class ItemServiceImpl implements ItemService {
         List<Item> listItem;
         if (from.isEmpty() || size.isEmpty()) {
             listItem = repository.findByOwner_IdOrderById(idUser.get());
-        }
-        else if (from.get() < 0 || size.get() <= 0) {
+        } else if (from.get() < 0 || size.get() <= 0) {
             throw new BadRequestException("Ошибка 1 ItemServiceImpl.getAllItemsOwner()");
         } else {
             listItem = em.createQuery("SELECT i FROM Item i WHERE i.owner.id = ?1 ORDER BY i.id", Item.class)

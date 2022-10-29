@@ -31,14 +31,13 @@
         @BeforeEach
         void beforeEach() {
             user = new User(1L, "user1", "user1@mail.com");
-            UserDto wrongUser = new UserDto(1L, null, "wrongUser@mail.com");
             userDto = new UserDto(1L, "user1", "user1@mail.com");
 
             list = Collections.singletonList(user);
         }
 
         @Test
-        void getUsersTest () {
+        void getUsersTest() {
             Mockito
                     .when(userRepository.findAll()).thenReturn(list);
             Mockito
@@ -50,7 +49,7 @@
         }
 
         @Test
-        void getUserTest () {
+        void getUserTest() {
             Mockito
                     .when(userRepository.findById(1L)).thenReturn(Optional.of(user));
             Mockito
@@ -69,7 +68,7 @@
         }
 
         @Test
-        void whenGetIDUserToDelete_thenDeleteUser () {
+        void whenGetIDUserToDelete_thenDeleteUser() {
             Mockito
                     .when(userRepository.findById(1L)).thenReturn(Optional.ofNullable(user));
 

@@ -103,7 +103,7 @@ class BookingServiceImplTest {
 
     @Test
     void bookingCreateFiledByStartInBeforeTimeTodayTest() {
-        BookingDtoIn failedBookingDtoIn_2 = new BookingDtoIn(
+        BookingDtoIn failedBookingDtoIn2 = new BookingDtoIn(
                 1L,
                 booking.getStart().minusMonths(3),
                 booking.getEnd().plusMonths(1)
@@ -113,13 +113,13 @@ class BookingServiceImplTest {
         when(userRepository.findById(2L))
                 .thenReturn(Optional.ofNullable(booker));
         Exception exc = assertThrows(BadRequestException.class,
-                () -> bookingService.createBooking(Optional.of(2L), Optional.of(failedBookingDtoIn_2)));
+                () -> bookingService.createBooking(Optional.of(2L), Optional.of(failedBookingDtoIn2)));
         assertEquals("Ошибка 5, BookingServiceImpl.createBooking", exc.getMessage());
     }
 
     @Test
     void bookingCreateFiledByEndInBeforeTimeTodayTest() {
-        BookingDtoIn failedBookingDtoIn_2 = new BookingDtoIn(
+        BookingDtoIn failedBookingDtoIn2 = new BookingDtoIn(
                 1L,
                 booking.getStart().minusMonths(3),
                 booking.getEnd().minusMonths(2)
@@ -129,7 +129,7 @@ class BookingServiceImplTest {
         when(userRepository.findById(2L))
                 .thenReturn(Optional.ofNullable(booker));
         Exception exc = assertThrows(BadRequestException.class,
-                () -> bookingService.createBooking(Optional.of(2L), Optional.of(failedBookingDtoIn_2)));
+                () -> bookingService.createBooking(Optional.of(2L), Optional.of(failedBookingDtoIn2)));
         assertEquals("Ошибка 4, BookingServiceImpl.createBooking", exc.getMessage());
     }
 

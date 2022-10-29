@@ -15,6 +15,7 @@
             this.limit = limit;
             this.sort = sort;
         }
+
         public static Pageable of(Integer from, Integer size) throws BadRequestException {
             if (from == 0 && size == 0)
                 throw new BadRequestException("Параметры страниц заданы не верно! FromSizeRequest()");
