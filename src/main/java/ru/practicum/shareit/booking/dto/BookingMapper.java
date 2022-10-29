@@ -23,7 +23,7 @@ public class BookingMapper {
 
         );
     }
-
+/*
     public static BookingDtoById toBookingDtoById(Booking booking) {
         return new BookingDtoById(
                 booking.getId(),
@@ -33,7 +33,7 @@ public class BookingMapper {
                 booking.getStatus()
         );
     }
-
+*/
     public static BookingDtoById toBookingDtoByIdTime(Booking booking) {
         return new BookingDtoById(
                 booking.getId(),

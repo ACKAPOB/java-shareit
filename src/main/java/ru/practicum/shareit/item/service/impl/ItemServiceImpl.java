@@ -22,6 +22,8 @@ import ru.practicum.shareit.requests.repository.ItemRequestRepository;
 import ru.practicum.shareit.user.model.User;
 import ru.practicum.shareit.user.repository.UserRepository;
 
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
 import java.time.LocalDateTime;
 import java.util.*;
 
@@ -34,6 +36,8 @@ public class ItemServiceImpl implements ItemService {
     private final CommentRepository commentRepository;
     private final BookingRepository bookingRepository;
     private final ItemRequestRepository itemRequestRepository;
+    @PersistenceContext
+    public EntityManager em;
 
     @Autowired
     public ItemServiceImpl(ItemRepository itemRepository, UserRepository userRepository,
@@ -99,18 +103,29 @@ public class ItemServiceImpl implements ItemService {
     }
 
     @Override
-    public List<ItemDtoOut> getAllItemsOwner(Optional<Long> userId) {
-        validationUser(userId);
+    public List<ItemDtoOut> getAllItemsOwner(Optional<Long> idUser, Optional<Integer> from, Optional<Integer> size) {
+        validationUser(idUser);
         List<Item> listItem;
-        listItem = repository.findByOwner_IdOrderById(userId.get());
-        if (listItem.isEmpty()) {
-            throw new BadRequestException("У пользователя нет вещей! getAllItemsOwner()");
+        if (from.isEmpty() || size.isEmpty()) {
+            listItem = repository.findByOwner_IdOrderById(idUser.get());
         }
+        else if (from.get() < 0 || size.get() <= 0) {
+            throw new BadRequestException("Ошибка 1 ItemServiceImpl.getAllItemsOwner()");
+        } else {
+            listItem = em.createQuery("SELECT i FROM Item i WHERE i.owner.id = ?1 ORDER BY i.id", Item.class)
+                    .setParameter(1, idUser.get())
+                    .setFirstResult(from.get() - 1)
+                    .setMaxResults(size.get())
+                    .getResultList();
+        }
+        if (listItem.isEmpty()) throw new BadRequestException("Ошибка 2 ItemServiceImpl.getAllItemsOwner()");
+
         List<ItemDtoOut> list = new ArrayList<>();
         for (Item item : listItem) {
             list.add(findLastNextBooking(item));
         }
-        log.info("Поиск всех Item ItemServiceImpl.getAllItemsOwner, userId = {}, list = {}", userId, list);
+        //listItem.stream().map(x -> list.add(findLastNextBooking(x))); // доделать бы, но тут дедлайн
+        log.info("Поиск всех Item ItemServiceImpl.getAllItemsOwner, userId = {}, list = {}", idUser, list);
         return list;
     }
 
@@ -148,14 +163,17 @@ public class ItemServiceImpl implements ItemService {
     }
 
     @Override
-    public List<ItemDto> getItemByIdSearch(Optional<Long> userId, String text) {
-        validationUser(userId);
+    public List<ItemDto> getItemByIdSearch(Optional<Long> idUser, String text, Optional<Integer> from, Optional<Integer> size) {
+        validationUser(idUser);
         if (text == null || text.length() == 0) return Collections.emptyList();
         List<Item> listItem = repository.searchListItem(text);
-        if (listItem.isEmpty()) {
-            throw new BadRequestException("Ошибка! ItemServiceImpl.getItemByIdSearch ()");
+        if (from.isEmpty() || size.isEmpty()) {
+            listItem = repository.searchListItemText(text);
+            if (listItem.isEmpty()) {
+                throw new BadRequestException("Ошибка! ItemServiceImpl.getItemByIdSearch ()");
+            }
         }
-        log.info("Поиск Item по Text ItemServiceImpl.getItemByIdSearch, userId = {}, text = {}", userId, text);
+        log.info("Поиск Item по Text ItemServiceImpl.getItemByIdSearch, userId = {}, text = {}", idUser, text);
         return ItemMapper.toListItemDto(listItem);
     }
 

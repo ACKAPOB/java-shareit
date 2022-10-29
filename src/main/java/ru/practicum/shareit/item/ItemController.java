@@ -50,9 +50,11 @@ public class ItemController {
     }
 
     @GetMapping()
-    protected List<ItemDtoOut> getAllItemsOwner(@RequestHeader("X-Sharer-User-Id") Optional<Long> userId) {
+    protected List<ItemDtoOut> getAllItemsOwner(@RequestHeader("X-Sharer-User-Id") Optional<Long> userId,
+                                                @RequestParam(value = "from", required = false) Optional<Integer> from,
+                                                @RequestParam(value = "size", required = false) Optional<Integer> size){
         log.info("Поиск всех Item ItemController.getAllItemsOwner, userId = {}", userId);
-        return itemService.getAllItemsOwner(userId);
+        return itemService.getAllItemsOwner(userId, from, size);
     }
 
     @GetMapping("/{id}")
@@ -66,9 +68,11 @@ public class ItemController {
     @GetMapping("/search")
     protected List<ItemDto> getItemByIdSearch(
             @RequestHeader("X-Sharer-User-Id") Optional<Long> userId,
-            @RequestParam("text") String text) {
+            @RequestParam("text") String text,
+            @RequestParam(value = "from", required = false) Optional<Integer> from,
+            @RequestParam(value = "size", required = false) Optional<Integer> size) {
         log.info("Поиск всех Item ItemController.getAllItems, userId = {}, text = {}", userId, text);
-        return itemService.getItemByIdSearch(userId, text);
+        return itemService.getItemByIdSearch(userId, text, from, size);
     }
 
     @PostMapping("/{itemId}/comment")

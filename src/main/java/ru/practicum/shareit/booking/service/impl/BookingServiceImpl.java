@@ -2,8 +2,10 @@ package ru.practicum.shareit.booking.service.impl;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import ru.practicum.shareit.booking.FromSizeRequest;
 import ru.practicum.shareit.booking.dto.BookingDtoIn;
 import ru.practicum.shareit.booking.dto.BookingDtoOut;
 import ru.practicum.shareit.booking.exception.BadRequestException;
@@ -36,8 +38,9 @@ public class BookingServiceImpl implements BookingService {
     @Override
     @Transactional
     public BookingDtoOut createBooking(Optional<Long> userId, Optional<BookingDtoIn> bookingDtoIn) {
-        User user = validationUser(userId);
         Item item = validationItem(bookingDtoIn);
+        User user = validationUser(userId);
+
         if (user.getId().equals(item.getOwner().getId()))
             throw new BookingNotFoundException("Ошибка 1, BookingServiceImpl.createBooking");
         if (!item.getAvailable())
@@ -82,71 +85,78 @@ public class BookingServiceImpl implements BookingService {
     public BookingDtoOut getBookingById(Optional<Long> userId, Optional<Long> bookingId) {
         User user = validationUser(userId);
         Booking booking = validationBooking(bookingId);
-        if (booking.getBooker().getId().equals(user.getId()) ||
-                booking.getItem().getOwner().getId().equals(user.getId())) {
-            log.info("Получение Booking BookingServiceImpl.getBookingById, booking = {}, userId = {} ", booking, userId);
-            return BookingMapper.toBookingDto(booking);
+        if (!booking.getBooker().getId().equals(user.getId()) &&
+                !booking.getItem().getOwner().getId().equals(user.getId())) {
+            throw new BookingNotFoundException("Ошибка, BookingServiceImpl.getBookingById");
         }
-        throw new BookingNotFoundException("Ошибка, BookingServiceImpl.getBookingById");
+        log.info("Получение Booking BookingServiceImpl.getBookingById, booking = {}, userId = {} ", booking, userId);
+        return BookingMapper.toBookingDto(booking);
     }
 
     @Override
-    public List<BookingDtoOut> getBookingsState(Optional<Long> userId, String state)
+    public List<BookingDtoOut> getBookingsState(Optional<Long> userId,
+                                                Optional<Integer> from,
+                                                Optional<Integer> size,
+                                                String state)
             throws BadRequestException, MessageFailedException {
         User user = validationUser(userId);
+        final Pageable pageable = FromSizeRequest.of(from.get(), size.get());
         switch (state) {
             case "ALL":
                 log.info("Получение ALL Bookings BookingServiceImpl.getBookingsState, userId = {} ", userId);
                 return BookingMapper.toListBookingDto(bookingRepository
-                        .findBookingsByBookerIdOrderByStartDesc(userId.get()));
+                        .findBookingsByBookerIdOrderByStartDesc(userId.get(), pageable));
             case "CURRENT":
                 log.info("Получение CURRENT Bookings BookingServiceImpl.getBookingsState, userId = {} ", userId);
                 return BookingMapper.toListBookingDto(bookingRepository
-                        .findByBookingsListStateCurrent(userId.get(), LocalDateTime.now()));
+                        .findByBookingsListStateCurrent(userId.get(), LocalDateTime.now(), pageable));
             case "PAST":
                 log.info("Получение PAST Bookings BookingServiceImpl.getBookingsState, userId = {} ", userId);
                 return BookingMapper.toListBookingDto(bookingRepository
-                        .findByBookingsListStatePast(userId.get(), LocalDateTime.now()));
+                        .findByBookingsListStatePast(userId.get(), LocalDateTime.now(), pageable));
             case "FUTURE":
                 log.info("Получение FUTURE Bookings BookingServiceImpl.getBookingsState, userId = {} ", userId);
-                return BookingMapper.toListBookingDto(bookingRepository.findByBookingsListStateFuture(userId.get()));
+                return BookingMapper.toListBookingDto(bookingRepository.findByBookingsListStateFuture(userId.get(), pageable));
             case "WAITING":
                 log.info("Получение WAITING Bookings BookingServiceImpl.getBookingsState, userId = {} ", userId);
-                return BookingMapper.toListBookingDto(bookingRepository.findByBookingsListStateWaiting(userId.get()));
+                return BookingMapper.toListBookingDto(bookingRepository.findByBookingsListStateWaiting(userId.get(), pageable));
             case "REJECTED":
                 log.info("Получение REJECTED Bookings BookingServiceImpl.getBookingsState, userId = {} ", userId);
-                return BookingMapper.toListBookingDto(bookingRepository.findByBookingsListStateRejected(userId.get()));
+                return BookingMapper.toListBookingDto(bookingRepository.findByBookingsListStateRejected(userId.get(), pageable));
             default:
                 throw new MessageFailedException();
         }
     }
 
     @Override
-    public List<BookingDtoOut> getBookingsOwnerState(Optional<Long> userId, String state) throws
-            MessageFailedException {
+    public List<BookingDtoOut> getBookingsOwnerState(Optional<Long> userId,
+                                                     Optional<Integer> from,
+                                                     Optional<Integer> size,
+                                                     String state)
+            throws MessageFailedException {
         User user = validationUser(userId);
-
+        final Pageable pageable = FromSizeRequest.of(from.get(), size.get());
         switch (state) {
             case "ALL":
                 log.info("Получение ALL Bookings BookingServiceImpl.getBookingsOwnerState, ownerId = {} ", userId);
                 return BookingMapper.toListBookingDto(bookingRepository
-                        .findByBookingsOwnerListStateAll(userId.get()));
+                        .findByBookingsOwnerListStateAll(userId.get(), pageable));
             case "CURRENT":
                 log.info("Получение CURRENT Bookings BookingServiceImpl.getBookingsOwnerState, ownerId = {} ", userId);
                 return BookingMapper.toListBookingDto(bookingRepository
-                        .findByBookingsOwnerListStateCurrent(userId.get(), LocalDateTime.now()));
+                        .findByBookingsOwnerListStateCurrent(userId.get(), LocalDateTime.now(), pageable));
             case "PAST":
                 log.info("Получение PAST Bookings BookingServiceImpl.getBookingsOwnerState, ownerId = {} ", userId);
                 return BookingMapper.toListBookingDto(bookingRepository
-                        .findByBookingsOwnerListStatePast(userId.get(), LocalDateTime.now()));
+                        .findByBookingsOwnerListStatePast(userId.get(), LocalDateTime.now(), pageable));
             case "FUTURE":
                 log.info("Получение FUTURE Bookings BookingServiceImpl.getBookingsOwnerState, ownerId = {} ", userId);
                 return BookingMapper.toListBookingDto(bookingRepository
-                        .findByBookingsOwnerListStateFuture(userId.get()));
+                        .findByBookingsOwnerListStateFuture(userId.get(), pageable));
             case "WAITING":
                 log.info("Получение WAITING Bookings BookingServiceImpl.getBookingsOwnerState, ownerId = {} ", userId);
                 return BookingMapper.toListBookingDto(bookingRepository
-                        .findByBookingsOwnerListStateWaiting(userId.get()));
+                        .findByBookingsOwnerListStateWaiting(userId.get(), pageable));
             case "REJECTED":
                 log.info("Получение REJECTED Bookings BookingServiceImpl.getBookingsOwnerState, ownerId = {} ", userId);
                 return BookingMapper.toListBookingDto(bookingRepository

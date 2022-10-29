@@ -8,6 +8,8 @@ import ru.practicum.shareit.booking.exception.MessageFailedException;
 import ru.practicum.shareit.booking.service.BookingService;
 
 import javax.validation.Valid;
+import javax.validation.constraints.Positive;
+import javax.validation.constraints.PositiveOrZero;
 import java.util.List;
 import java.util.Optional;
 
@@ -48,17 +50,21 @@ public class BookingController {
 
     @GetMapping()
     protected List<BookingDtoOut> getBookingsState(@RequestHeader("X-Sharer-User-Id") Optional<Long> userId,
+                                                   @PositiveOrZero @RequestParam(value = "from", defaultValue = "0") Optional<Integer> from,
+                                                   @Positive @RequestParam(value = "size", defaultValue = "10") Optional<Integer> size,
                                                    @RequestParam(value = "state", required = false, defaultValue = "ALL") String state)
             throws MessageFailedException {
         log.info("Поиск Bookings BookingController.getBookingsState, userId = {}", userId);
-        return bookingService.getBookingsState(userId, state);
+        return bookingService.getBookingsState(userId, from, size, state);
     }
 
     @GetMapping("/owner")
     protected List<BookingDtoOut> getBookingsOwnerState(@RequestHeader("X-Sharer-User-Id") Optional<Long> userId,
+                                                        @PositiveOrZero @RequestParam(value = "from", defaultValue = "0") Optional<Integer> from,
+                                                        @Positive @RequestParam(value = "size", defaultValue = "10") Optional<Integer> size,
                                                         @RequestParam(value = "state", required = false, defaultValue = "ALL") String state)
             throws MessageFailedException {
         log.info("Поиск Bookings BookingController.getBookingsOwnerState, userId = {}, state = {}", userId, state);
-        return bookingService.getBookingsOwnerState(userId, state);
+        return bookingService.getBookingsOwnerState(userId, from, size, state);
     }
 }
