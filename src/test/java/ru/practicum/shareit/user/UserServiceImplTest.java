@@ -68,9 +68,13 @@
         }
 
         @Test
-        void whenGetIDUserToDelete_thenDeleteUser() {
+        void deleteUserTest() {
             Mockito
-                    .when(userRepository.findById(1L)).thenReturn(Optional.ofNullable(user));
+                    .when(userRepository.existsById(1L))
+                    .thenReturn(true);
+            Mockito
+                    .when(userRepository.findById(1L))
+                    .thenReturn(Optional.ofNullable(user));
 
             userService.deleteUser(1L);
             Mockito.verify(userRepository, Mockito.times(1))
