@@ -3,7 +3,6 @@ package ru.practicum.shareit.booking.service.impl;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.practicum.shareit.booking.FromSizeRequest;
@@ -101,7 +100,7 @@ public class BookingServiceImpl implements BookingService {
                                                 String state)
             throws BadRequestException, MessageFailedException {
         User user = validationUser(userId);
-        final Pageable pageable = FromSizeRequest.of(from.get(), size.get(), Sort.by("start").descending());
+        final Pageable pageable = FromSizeRequest.of(from.get(), size.get());
         switch (state) {
             case "ALL":
                 log.info("Получение ALL Bookings BookingServiceImpl.getBookingsState, userId = {} ", userId);
@@ -136,7 +135,7 @@ public class BookingServiceImpl implements BookingService {
                                                      String state)
             throws MessageFailedException {
         User user = validationUser(userId);
-        final Pageable pageable = FromSizeRequest.of(from.get(), size.get(), Sort.by("start").descending());
+        final Pageable pageable = FromSizeRequest.of(from.get(), size.get());
         switch (state) {
             case "ALL":
                 log.info("Получение ALL Bookings BookingServiceImpl.getBookingsOwnerState, ownerId = {} ", userId);
