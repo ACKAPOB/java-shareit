@@ -9,7 +9,7 @@ import java.util.Optional;
 
 public interface ItemService {
 
-    List<ItemDtoOut> getAllItemsOwner(Optional<Long> idUser, Optional <Integer> from, Optional <Integer> size);
+    List<ItemDtoOut> getAllItemsOwner(Optional<Long> idUser, Optional<Integer> from, Optional<Integer> size);
 
     List<ItemDto> getItemByIdSearch(Optional<Long> idUser,String text,Optional<Integer> from, Optional<Integer> size);
 
