@@ -103,7 +103,7 @@ public class ItemServiceImpl implements ItemService {
     }
 
     @Override
-    public List<ItemDtoOut> getAllItemsOwner(Optional<Long> idUser, Optional<Integer> from, Optional<Integer> size) {
+    public List<ItemDtoOut> getAllItemsOwner(Optional<Long> idUser, Optional <Integer> from, Optional <Integer> size) {
         validationUser(idUser);
         List<Item> listItem;
         if (from.isEmpty() || size.isEmpty()) {
