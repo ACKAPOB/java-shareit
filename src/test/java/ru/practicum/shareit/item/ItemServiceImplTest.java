@@ -58,7 +58,7 @@ public class ItemServiceImplTest {
     private ItemRequest itemRequest;
 
     @BeforeEach
-    void setUp() throws Exception {
+    void setUp() {
         user = new User(1L, "user1", "user1@mail.com");
         userNew = new User(2L,"user2","user2@mail.com");
         userDto = new UserDto(1L,"user1","user1@mail.com");
@@ -101,7 +101,7 @@ public class ItemServiceImplTest {
         Mockito
                 .when(itemRepository.save(item))
                 .thenReturn(item);
-        ItemDto itemDtoTest = itemService.createItem(Optional.of(1L), itemDto);
+        ItemDto itemDtoTest = itemService.createItem(1L, itemDto);
         Assertions.assertEquals(1L, itemDtoTest.getId());
         Assertions.assertEquals("item", itemDtoTest.getName());
         Assertions.assertEquals("user1", itemDtoTest.getOwner().getName());
@@ -118,7 +118,7 @@ public class ItemServiceImplTest {
         Mockito
                 .when(itemRepository.save(item))
                 .thenReturn(item);
-        Assertions.assertThrows(BadRequestException.class, () -> itemService.createItem(Optional.of(1L),
+        Assertions.assertThrows(BadRequestException.class, () -> itemService.createItem(1L,
                 new ItemDto(1L,"item",null,true, userDto,1L)));
     }
 
@@ -130,7 +130,7 @@ public class ItemServiceImplTest {
                 .when(itemRequestRepository.findById(1L)).thenReturn(Optional.of(itemRequest));
         Mockito
                 .when(itemRepository.save(item)).thenReturn(item);
-        Assertions.assertThrows(BadRequestException.class, () -> itemService.createItem(Optional.of(1L),
+        Assertions.assertThrows(BadRequestException.class, () -> itemService.createItem(1L,
                 new ItemDto(1L,"item",null,true, userDto, 1L)));
     }
 
@@ -142,7 +142,7 @@ public class ItemServiceImplTest {
                 .when(itemRequestRepository.findById(1L)).thenReturn(Optional.of(itemRequest));
         Mockito
                 .when(itemRepository.save(item)).thenReturn(item);
-        Assertions.assertThrows(BadRequestException.class, () -> itemService.createItem(Optional.of(1L),
+        Assertions.assertThrows(BadRequestException.class, () -> itemService.createItem(1L,
                 new ItemDto(1L,"item","null",null, userDto, 1L)));
     }
 
@@ -162,13 +162,13 @@ public class ItemServiceImplTest {
                 .thenReturn(List.of(new Comment(1L, item, user,"text", LocalDateTime.now())));
         Mockito
                 .when(bookingRepository.findByItem_Id(1L)).thenReturn(Optional.of(list));
-        ItemDtoOut itemTest = itemService.getItemById(Optional.of(1L), Optional.of(1L));
+        ItemDtoOut itemTest = itemService.getItemById(1L, 1L);
         Assertions.assertEquals(1L, itemTest.getId());
         Assertions.assertEquals("item", itemTest.getName());
         Assertions.assertEquals("desc", itemTest.getDescription());
         Assertions.assertEquals(1L, itemTest.getComments().get(0).getId());
 
-        ItemDtoOut itemTest2 = itemService.getItemById(Optional.of(2L), Optional.of(1L));
+        ItemDtoOut itemTest2 = itemService.getItemById(2L, 1L);
         Assertions.assertEquals(1L, itemTest2.getId());
         Assertions.assertEquals("item", itemTest2.getName());
         Assertions.assertEquals("desc", itemTest2.getDescription());
@@ -180,7 +180,7 @@ public class ItemServiceImplTest {
                 .when(userRepository.findById(1L)).thenReturn(Optional.of(user));
         Mockito
                 .when(itemRepository.findById(1L)).thenReturn(Optional.ofNullable(item));
-        Assertions.assertThrows(BadRequestException.class, () -> itemService.getItemById(Optional.of(1L), Optional.empty()));
+        Assertions.assertThrows(NotFoundException.class, () -> itemService.getItemById(1L, 1000L));
     }
 
     @Test
@@ -189,7 +189,7 @@ public class ItemServiceImplTest {
                 .when(userRepository.findById(1L)).thenReturn(Optional.of(user));
         Mockito
                 .when(itemRepository.findById(1L)).thenReturn(Optional.ofNullable(item));
-        Assertions.assertThrows(NotFoundException.class, () -> itemService.getItemById(Optional.of(1L), Optional.of(100L)));
+        Assertions.assertThrows(NotFoundException.class, () -> itemService.getItemById(1L, 100L));
     }
 
     @Test
@@ -200,8 +200,7 @@ public class ItemServiceImplTest {
                 .when(itemRepository.findById(1L)).thenReturn(Optional.ofNullable(item));
         Mockito
                 .when(itemRepository.save(item)).thenReturn(item);
-        Assertions.assertThrows(NotFoundException.class, () -> itemService.updateItem(Optional.of(1L),
-                itemDto, Optional.of(1L)));
+        Assertions.assertThrows(NotFoundException.class, () -> itemService.updateItem(1L, itemDto, 1L));
     }
 
     @Test
@@ -212,7 +211,7 @@ public class ItemServiceImplTest {
         Mockito
                 .when(itemRepository.findById(1L))
                 .thenReturn(Optional.ofNullable(item));
-        itemService.deleteItem(Optional.of(2L), Optional.of(1L));
+        itemService.deleteItem(2L,1L);
         Mockito
                 .verify(itemRepository, Mockito.times(1))
                 .delete(item);
@@ -224,8 +223,8 @@ public class ItemServiceImplTest {
                 .when(userRepository.findById(2L)).thenReturn(Optional.of(userNew));
         Mockito
                 .when(itemRepository.findById(1L)).thenReturn(Optional.ofNullable(item));
-        Assertions.assertThrows(NotFoundException.class, () -> itemService.deleteItem(Optional.of(2L),
-                Optional.empty()));
+        Assertions.assertThrows(NotFoundException.class, () -> itemService.deleteItem(2L,
+                null));
     }
 
     @Test
@@ -234,8 +233,8 @@ public class ItemServiceImplTest {
                 .when(userRepository.findById(2L)).thenReturn(Optional.of(userNew));
         Mockito
                 .when(itemRepository.findById(1L)).thenReturn(Optional.ofNullable(item));
-        Assertions.assertThrows(NotFoundException.class, () -> itemService.deleteItem(Optional.of(1L),
-                Optional.of(1L)));
+        Assertions.assertThrows(NotFoundException.class, () -> itemService.deleteItem(1L,
+                1L));
     }
 
     @Test
@@ -248,7 +247,7 @@ public class ItemServiceImplTest {
                 .when(bookingRepository.findByItem_IdAndBooker_id(1L, 1L)).thenReturn(Optional.of(list));
         Mockito
                 .when(commentRepository.save(comment)).thenReturn(comment);
-        CommentDto commentDtoTest = itemService.createComment(Optional.of(1L), Optional.of(1L), commentDto);
+        CommentDto commentDtoTest = itemService.createComment(1L, 1L, commentDto);
         Assertions.assertEquals(1L, commentDtoTest.getId());
         Assertions.assertEquals("item", commentDtoTest.getItem().getName());
         Assertions.assertEquals("text", commentDtoTest.getText());
@@ -268,8 +267,8 @@ public class ItemServiceImplTest {
         Mockito
                 .when(commentRepository.save(comment))
                 .thenReturn(comment);
-        Assertions.assertThrows(BadRequestException.class, () -> itemService.createComment(Optional.of(1L),
-                Optional.of(1L), new CommentDto(1L,"", itemDto,"user1", LocalDateTime.now())));
+        Assertions.assertThrows(BadRequestException.class, () -> itemService.createComment(1L,
+                1L, new CommentDto(1L,"", itemDto,"user1", LocalDateTime.now())));
     }
 
     @Test
@@ -282,7 +281,7 @@ public class ItemServiceImplTest {
                 .when(bookingRepository.findByItem_IdAndBooker_id(1L, 1L)).thenReturn(Optional.empty());
         Mockito
                 .when(commentRepository.save(comment)).thenReturn(comment);
-        Assertions.assertThrows(BadRequestException.class, () -> itemService.createComment(Optional.of(1L),
-                Optional.of(1L), commentDto));
+        Assertions.assertThrows(BadRequestException.class, () -> itemService.createComment(1L,
+                1L, commentDto));
     }
 }

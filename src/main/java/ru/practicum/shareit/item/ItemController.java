@@ -31,7 +31,7 @@ public class ItemController {
     protected ItemDto createItem(@Valid @RequestHeader("X-Sharer-User-Id") Optional<Long> userId,
                                  @RequestBody ItemDto itemDto) {
         log.info("Создание Item ItemController.updateItem, userId = {}", userId);
-        return itemService.createItem(userId, itemDto);
+        return itemService.createItem(userId.get(), itemDto);
     }
 
     @PatchMapping("/{id}")
@@ -39,14 +39,14 @@ public class ItemController {
                                  @PathVariable Optional<Long> id,
                                  @RequestBody ItemDto itemDto) {
         log.info("Обновление Item ItemController.updateItem, userId = {}, itemid = {}, itemDto = {}", userId, id, itemDto);
-        return itemService.updateItem(userId, itemDto, id);
+        return itemService.updateItem(userId.get(), itemDto, id.get());
     }
 
     @DeleteMapping("/{id}")
     protected ItemDto deleteItem(@RequestHeader("X-Sharer-User-Id") Optional<Long> userId,
                                  @PathVariable Optional<Long> id) {
         log.info("Удаление Item ItemController.updateItem, userId = {}, itemid = {}", userId, id);
-        return itemService.deleteItem(userId, id);
+        return itemService.deleteItem(userId.get(), id.get());
     }
 
     @GetMapping()
@@ -61,7 +61,7 @@ public class ItemController {
     protected ItemDtoOut getItemById(@RequestHeader("X-Sharer-User-Id") Optional<Long> userId,
                                      @PathVariable Optional<Long> id) {
         log.info("Поиск Item ItemController.getItemById, userId = {}, itemid = {}", userId, id);
-        return itemService.getItemById(userId, id);
+        return itemService.getItemById(userId.get(), id.get());
     }
 
 
@@ -80,6 +80,6 @@ public class ItemController {
                                        @PathVariable Optional<Long> itemId,
                                        @RequestBody CommentDto commentDto) {
         log.info("Создание Сomment ItemController.createComment, userId = {}, itemid = {}, commentDto = {}", userId, itemId, commentDto);
-        return itemService.createComment(userId, itemId, commentDto);
+        return itemService.createComment(userId.get(), itemId.get(), commentDto);
     }
 }

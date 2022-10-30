@@ -9,17 +9,17 @@ import java.util.Optional;
 
 public interface ItemService {
 
-    List<ItemDtoOut> getAllItemsOwner(Optional<Long> idUser, Optional<Integer> from, Optional<Integer> size);
+    List<ItemDtoOut> getAllItemsOwner(Optional<Long> idUser, Optional <Integer> from, Optional <Integer> size);
 
-    List<ItemDto> getItemByIdSearch(Optional<Long> idUser, String text, Optional<Integer> from, Optional<Integer> size);
+    List<ItemDto> getItemByIdSearch(Optional<Long> idUser,String text,Optional<Integer> from, Optional<Integer> size);
 
-    CommentDto createComment(Optional<Long> idUser, Optional<Long> itemId, CommentDto text);
+    CommentDto createComment(Long idUser, Long itemId, CommentDto text);
 
-    ItemDtoOut getItemById(Optional<Long> idUser, Optional<Long> id);
+    ItemDtoOut getItemById(Long idUser, Long id);
 
-    ItemDto updateItem(Optional<Long> idUser, ItemDto itemDto, Optional<Long> id);
+    ItemDto updateItem(Long idUser, ItemDto itemDto, Long id);
 
-    ItemDto createItem(Optional<Long> idUser, ItemDto itemDto);
+    ItemDto createItem(Long idUser, ItemDto itemDto);
 
-    ItemDto deleteItem(Optional<Long> idUser, Optional<Long> id);
+    ItemDto deleteItem(Long idUser, Long id);
 }

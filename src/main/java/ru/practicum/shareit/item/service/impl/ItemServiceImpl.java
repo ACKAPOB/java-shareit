@@ -51,8 +51,8 @@ public class ItemServiceImpl implements ItemService {
 
     @Override
     @Transactional
-    public ItemDto createItem(Optional<Long> userId, ItemDto itemDto) {
-        validationUser(userId);
+    public ItemDto createItem(Long userId, ItemDto itemDto) {
+        validationUser(Optional.of(userId));
         Item item = ItemMapper.toItem(itemDto);
         if (itemDto.getRequestId() != null)
             item.setRequest(itemRequestRepository.findById(itemDto.getRequestId()).get());
@@ -62,7 +62,7 @@ public class ItemServiceImpl implements ItemService {
             throw new BadRequestException("Ошибка данных, ItemServiceImpl.createItem, item.getDescription");
         if (item.getAvailable() == null)
             throw new BadRequestException("Ошибка данных, ItemServiceImpl.createItem, item.getAvailable");
-        item.setOwner(userRepository.findById(userId.get()).get());
+        item.setOwner(userRepository.findById(userId).get());
         repository.save(item);
         log.info("Создание Item ItemServiceImpl.createItem, userId = {}, item = {}", userId, item);
         return ItemMapper.toItemDto(item);
@@ -70,13 +70,13 @@ public class ItemServiceImpl implements ItemService {
 
     @Override
     @Transactional
-    public ItemDto updateItem(Optional<Long> userId, ItemDto itemDto, Optional<Long> id) {
+    public ItemDto updateItem(Long userId, ItemDto itemDto, Long id) {
         Item item = ItemMapper.toItem(itemDto);
-        if (id.isEmpty())
+        if (id == null)
             throw new NotFoundException("Ошибка отсутствует id Item, ItemServiceImpl.updateItem");
-        validationUser(userId);
-        Item itemUpd = repository.findById(id.get()).get();
-        if (!Objects.equals(itemUpd.getOwner().getId(), userId.get()))
+        validationUser(Optional.of(userId));
+        Item itemUpd = repository.findById(id).get();
+        if (!Objects.equals(itemUpd.getOwner().getId(), userId))
             throw new NotFoundException("Ошибка владелец указан неверно, ItemServiceImpl.updateItem");
         if (!(item.getName() == null || item.getName().isEmpty())) itemUpd.setName(item.getName());
         if (!(item.getDescription() == null || Objects.equals(item.getDescription(), "")))
@@ -89,12 +89,12 @@ public class ItemServiceImpl implements ItemService {
 
     @Override
     @Transactional
-    public ItemDto deleteItem(Optional<Long> userId, Optional<Long> id) {
-        validationUser(userId);
-        if (id.isPresent()) {
-            Item item = repository.findById(id.get()).get();
-            if (!Objects.equals(item.getOwner().getId(), userId.get()))
-                throw new NotFoundException("Ошибка getOwne, ItemServiceImpl.deleteItem()");
+    public ItemDto deleteItem(Long userId, Long id) {
+        validationUser(Optional.of(userId));
+        if (id != null) {
+            Item item = repository.findById(id).get();
+            if (!Objects.equals(item.getOwner().getId(), userId))
+                throw new NotFoundException("Ошибка getOwner, ItemServiceImpl.deleteItem()");
             repository.delete(item);
             log.info("Удаление Item, ItemServiceImpl.deleteItem item = {}.", item);
             return ItemMapper.toItemDto(item);
@@ -103,7 +103,7 @@ public class ItemServiceImpl implements ItemService {
     }
 
     @Override
-    public List<ItemDtoOut> getAllItemsOwner(Optional<Long> idUser, Optional<Integer> from, Optional<Integer> size) {
+    public List<ItemDtoOut> getAllItemsOwner(Optional<Long> idUser, Optional <Integer> from, Optional <Integer> size) {
         validationUser(idUser);
         List<Item> listItem;
         if (from.isEmpty() || size.isEmpty()) {
@@ -112,7 +112,7 @@ public class ItemServiceImpl implements ItemService {
             throw new BadRequestException("Ошибка 1 ItemServiceImpl.getAllItemsOwner()");
         } else {
             listItem = em.createQuery("SELECT i FROM Item i WHERE i.owner.id = ?1 ORDER BY i.id", Item.class)
-                    .setParameter(1, idUser.get())
+                    .setParameter(1, idUser)
                     .setFirstResult(from.get() - 1)
                     .setMaxResults(size.get())
                     .getResultList();
@@ -130,12 +130,12 @@ public class ItemServiceImpl implements ItemService {
 
 
     @Override
-    public ItemDtoOut getItemById(Optional<Long> userId, Optional<Long> id) {
-        validationUser(userId);
+    public ItemDtoOut getItemById(Long userId, Long id) {
+        validationUser(Optional.of(userId));
         validationItem(id);
-        Item item = repository.findById(id.get()).get();
+        Item item = repository.findById(id).get();
         ItemDtoOut itemDto;
-        if (Objects.equals(item.getOwner().getId(), userId.get())) {
+        if (Objects.equals(item.getOwner().getId(), userId)) {
             itemDto = findLastNextBooking(item);
         } else {
             itemDto = ItemMapper.toItemDtoOut(item);
@@ -162,7 +162,7 @@ public class ItemServiceImpl implements ItemService {
     }
 
     @Override
-    public List<ItemDto> getItemByIdSearch(Optional<Long> idUser, String text, Optional<Integer> from, Optional<Integer> size) {
+    public List<ItemDto> getItemByIdSearch(Optional<Long> idUser,String text, Optional<Integer> from, Optional<Integer> size) {
         validationUser(idUser);
         if (text == null || text.length() == 0) return Collections.emptyList();
         List<Item> listItem = repository.searchListItem(text);
@@ -187,12 +187,11 @@ public class ItemServiceImpl implements ItemService {
         return user;
     }
 
-    public Optional<Item> validationItem(Optional<Long> id) {
-        if (id.isEmpty()) {
-            System.out.println("PRINT ID " + id);
+    public Optional<Item> validationItem(Long id) {
+        if (id == null) {
             throw new BadRequestException("Ошибка id, ItemServiceImpl.validationItem()");
         }
-        Optional<Item> item = repository.findById(id.get());
+        Optional<Item> item = repository.findById(id);
         if (item.isEmpty())
             throw new NotFoundException("Ошибка item, ItemServiceImpl.validationItem()");
         log.info("Проверка item, ItemServiceImpl.validationUser, Item = {},", item);
@@ -201,12 +200,12 @@ public class ItemServiceImpl implements ItemService {
 
     @Override
     @Transactional
-    public CommentDto createComment(Optional<Long> userId, Optional<Long> id, CommentDto commentDto) {
+    public CommentDto createComment(Long userId, Long id, CommentDto commentDto) {
         if (commentDto.getText().isEmpty())
             throw new BadRequestException("Ошибка Comment - isEmpty, ItemServiceImpl.createComment");
-        Optional<User> user = validationUser(userId);
+        Optional<User> user = validationUser(Optional.of(userId));
         Optional<Item> item = validationItem(id);
-        Optional<List<Booking>> bookings = bookingRepository.findByItem_IdAndBooker_id(id.get(), userId.get());
+        Optional<List<Booking>> bookings = bookingRepository.findByItem_IdAndBooker_id(id, userId);
         if (bookings.isEmpty())
             throw new BadRequestException("Ошибка bookings - isEmpty, ItemServiceImpl.createComment");
         LocalDateTime time = LocalDateTime.now();
