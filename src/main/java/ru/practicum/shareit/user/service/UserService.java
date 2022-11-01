@@ -9,12 +9,12 @@ public interface UserService {
     UserDto createUser(UserDto userDto);
 
     @Transactional
-    UserDto updateUser(UserDto userDto, long id);
+    UserDto updateUser(UserDto userDto, Long id);
 
     @Transactional
-    void deleteUser(long id);
+    UserDto deleteUser(Long id);
 
-    UserDto getUser(long id);
+    UserDto getUser(Long id);
 
     List<UserDto> getUsers();
 }

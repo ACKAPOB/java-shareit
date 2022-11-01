@@ -5,6 +5,7 @@ import ru.practicum.shareit.booking.dto.BookingDtoOut;
 import ru.practicum.shareit.booking.exception.BadRequestException;
 import ru.practicum.shareit.booking.exception.MessageFailedException;
 
+import javax.validation.constraints.PositiveOrZero;
 import java.util.List;
 import java.util.Optional;
 
@@ -16,9 +17,13 @@ public interface BookingService {
 
     BookingDtoOut getBookingById(Optional<Long> userId, Optional<Long> bookingId);
 
-    List<BookingDtoOut> getBookingsState(Optional<Long> userId, String state)
+    List<BookingDtoOut> getBookingsState(Optional<Long> userId, Optional<Integer> from, Optional<Integer> size, String state)
             throws BadRequestException, MessageFailedException;
 
-    List<BookingDtoOut> getBookingsOwnerState(Optional<Long> userId, String state) throws
-            MessageFailedException;
+    List<BookingDtoOut> getBookingsOwnerState(Optional<Long> userId,
+                                              @PositiveOrZero Optional<Integer> from,
+                                              @PositiveOrZero Optional<Integer> size,
+                                              String state)
+            throws MessageFailedException;
+
 }

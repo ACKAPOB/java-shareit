@@ -22,7 +22,6 @@ import static java.util.stream.Collectors.toList;
 @Slf4j
 @Transactional(readOnly = true)
 public class UserServiceImpl implements UserService {
-    private long id = 0;
     private final UserMapper userMapper;
     private final UserRepository repository;
 
@@ -37,7 +36,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     @Transactional
-    public UserDto updateUser(UserDto userDto, long id) {
+    public UserDto updateUser(UserDto userDto, Long id) {
         if (!repository.existsById(id)) {
             throw new AlreadyExistsException(
                     "Некорректный запрос " + userDto);
@@ -57,17 +56,19 @@ public class UserServiceImpl implements UserService {
 
     @Override
     @Transactional
-    public void deleteUser(long id) {
+    public UserDto deleteUser(Long id) {
+        User user = repository.findById(id).get();
         if (!repository.existsById(id)) {
             throw new AlreadyExistsException(
                     "Некорректный запрос, пользователь не существует ");
         }
         log.info("Запрос на удаление пользователя " + id);
         repository.delete(repository.findById(id).get());
+        return UserMapper.toUserDto(user);
     }
 
     @Override
-    public UserDto getUser(long id) {
+    public UserDto getUser(Long id) {
         if (repository.findById(id).isPresent()) {
             return userMapper.toUserDtoDB(repository.findById(id).get());
         } else
