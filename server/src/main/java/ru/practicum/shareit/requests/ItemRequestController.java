@@ -44,7 +44,7 @@ public class ItemRequestController {
 
     @GetMapping("/{requestId}")
     protected ItemRequestDto getItemRequest(@RequestHeader("X-Sharer-User-Id") Optional<Long> userId,
-                                            @PathVariable Optional<Long> requestId) throws ValidationException {
+                                            @PathVariable Optional<Long> requestId) {
         return itemRequestService.getItemRequestById(userId, requestId.get());
     }
 

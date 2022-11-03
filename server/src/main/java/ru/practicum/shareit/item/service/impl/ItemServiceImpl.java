@@ -2,8 +2,10 @@ package ru.practicum.shareit.item.service.impl;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import ru.practicum.shareit.booking.FromSizeRequest;
 import ru.practicum.shareit.booking.dto.BookingMapper;
 import ru.practicum.shareit.booking.model.Booking;
 import ru.practicum.shareit.booking.repository.BookingRepository;
@@ -101,7 +103,7 @@ public class ItemServiceImpl implements ItemService {
         }
         throw new NotFoundException("Ошибка Id ItemServiceImpl.deleteItem()");
     }
-
+/*
     @Override
     public List<ItemDtoOut> getAllItemsOwner(Optional<Long> idUser, Optional<Integer> from, Optional<Integer> size) {
         validationUser(idUser);
@@ -125,6 +127,20 @@ public class ItemServiceImpl implements ItemService {
         }
         //listItem.stream().map(x -> list.add(findLastNextBooking(x))); // доделать бы, но тут дедлайн
         log.info("Поиск всех Item ItemServiceImpl.getAllItemsOwner, userId = {}, list = {}", idUser, list);
+        return list;
+    }*/
+
+    @Override
+    public List<ItemDtoOut> getAllItemsOwner (Optional<Long> idUser, Optional<Integer> from, Optional<Integer> size) {
+        validationUser(idUser);
+        final Pageable pageable = FromSizeRequest.of(from.get(), size.get());
+        List<Item> listItem = repository.findByOwner_IdOrderById(idUser.get(), pageable).getContent();
+        if (listItem.isEmpty()) throw new BadRequestException("У пользователя нет вещей! findAllItemsOwner()");
+        List<ItemDtoOut> list = new ArrayList<>();
+        for (Item item : listItem) {
+            list.add(findLastNextBooking(item));
+        }
+        log.info("Текущее количество вещей пользователя {}, в списке: {}", idUser.get(), list.size());
         return list;
     }
 

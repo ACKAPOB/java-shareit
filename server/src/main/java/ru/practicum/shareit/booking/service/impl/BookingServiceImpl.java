@@ -101,7 +101,8 @@ public class BookingServiceImpl implements BookingService {
                                                 String state)
             throws BadRequestException, MessageFailedException {
         User user = validationUser(userId);
-        final Pageable pageable = FromSizeRequest.of(from.get(), size.get(), Sort.by("start").descending());
+        //final Pageable pageable = FromSizeRequest.of(from.get(), size.get(), Sort.by("start").descending());
+        final Pageable pageable = FromSizeRequest.of(from.get(), size.get());
         switch (state) {
             case "ALL":
                 log.info("Получение ALL Bookings BookingServiceImpl.getBookingsState, userId = {} ", userId);
@@ -136,7 +137,8 @@ public class BookingServiceImpl implements BookingService {
                                                      String state)
             throws MessageFailedException {
         User user = validationUser(userId);
-        final Pageable pageable = FromSizeRequest.of(from.get(), size.get(), Sort.by("start").descending());
+        //final Pageable pageable = FromSizeRequest.of(from.get(), size.get(), Sort.by("start").descending());
+        final Pageable pageable = FromSizeRequest.of(from.get(), size.get());
         switch (state) {
             case "ALL":
                 log.info("Получение ALL Bookings BookingServiceImpl.getBookingsOwnerState, ownerId = {} ", userId);
