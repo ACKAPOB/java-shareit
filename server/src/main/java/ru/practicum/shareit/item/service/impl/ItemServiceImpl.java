@@ -103,35 +103,9 @@ public class ItemServiceImpl implements ItemService {
         }
         throw new NotFoundException("Ошибка Id ItemServiceImpl.deleteItem()");
     }
-/*
+
     @Override
     public List<ItemDtoOut> getAllItemsOwner(Optional<Long> idUser, Optional<Integer> from, Optional<Integer> size) {
-        validationUser(idUser);
-        List<Item> listItem;
-        if (from.isEmpty() || size.isEmpty()) {
-            listItem = repository.findByOwner_IdOrderById(idUser.get());
-        } else if (from.get() < 0 || size.get() <= 0) {
-            throw new BadRequestException("Ошибка 1 ItemServiceImpl.getAllItemsOwner()");
-        } else {
-            listItem = em.createQuery("SELECT i FROM Item i WHERE i.owner.id = ?1 ORDER BY i.id", Item.class)
-                    .setParameter(1, idUser.get())
-                    .setFirstResult(from.get() - 1)
-                    .setMaxResults(size.get())
-                    .getResultList();
-        }
-        if (listItem.isEmpty()) throw new BadRequestException("Ошибка 2 ItemServiceImpl.getAllItemsOwner()");
-
-        List<ItemDtoOut> list = new ArrayList<>();
-        for (Item item : listItem) {
-            list.add(findLastNextBooking(item));
-        }
-        //listItem.stream().map(x -> list.add(findLastNextBooking(x))); // доделать бы, но тут дедлайн
-        log.info("Поиск всех Item ItemServiceImpl.getAllItemsOwner, userId = {}, list = {}", idUser, list);
-        return list;
-    }*/
-
-    @Override
-    public List<ItemDtoOut> getAllItemsOwner (Optional<Long> idUser, Optional<Integer> from, Optional<Integer> size) {
         validationUser(idUser);
         final Pageable pageable = FromSizeRequest.of(from.get(), size.get());
         List<Item> listItem = repository.findByOwner_IdOrderById(idUser.get(), pageable).getContent();
@@ -143,7 +117,6 @@ public class ItemServiceImpl implements ItemService {
         log.info("Текущее количество вещей пользователя {}, в списке: {}", idUser.get(), list.size());
         return list;
     }
-
 
     @Override
     public ItemDtoOut getItemById(Optional<Long> userId, Optional<Long> id) {
