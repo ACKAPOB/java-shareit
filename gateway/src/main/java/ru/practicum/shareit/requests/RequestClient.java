@@ -30,7 +30,7 @@ public class RequestClient extends BaseClient {
     }
 
     public ResponseEntity<Object> createItemRequest (Long userId, ItemRequestDto itemRequestDto) {
-        log.info("RequestClient.createItemRequest, userId = {}, itemRequestDto = {}", userId, itemRequestDto);
+        log.info("RequestClient.createItemRequest, userId = {}, itemRequestDto = {}", userId, itemRequestDto.toString());
         return post("", userId, itemRequestDto);
     }
 

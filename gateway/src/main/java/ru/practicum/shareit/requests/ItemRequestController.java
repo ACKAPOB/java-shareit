@@ -25,7 +25,7 @@ public class ItemRequestController {
     @PostMapping()
     protected ResponseEntity<Object> createItemRequestGateWay(@RequestHeader("X-Sharer-User-Id") Long userId,
                                                               @Valid @RequestBody ItemRequestDto itemRequestDto) {
-        log.info("ItemRequestController.createItemRequestGateWay, userId = {}", userId);
+        log.info("ItemRequestController.createItemRequestGateWay, userId = {}, itemRequestDto = {}", userId, itemRequestDto.toString());
         return requestClient.createItemRequest(userId, itemRequestDto);
     }
 

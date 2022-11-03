@@ -182,6 +182,7 @@ public class BookingServiceImpl implements BookingService {
         if (bookingDtoIn.isEmpty()) {
             throw new BookingNotFoundException("Ошибка bookingDtoIn.isEmpty, BookingServiceImpl.validationItem()");
         }
+        System.out.printf("sdjvndkljsmnlksdmvklsdvmk" + bookingDtoIn.toString());
         Optional<Item> item = itemRepository.findById(bookingDtoIn.get().getItemId());
         if (item.isEmpty()) {
             throw new BookingNotFoundException("Ошибка item.isEmpty, BookingServiceImpl.validationItem()");
