@@ -29,17 +29,17 @@ public class ItemClient extends BaseClient {
         );
     }
 
-    public ResponseEntity<Object> createItem (Long userId, ItemDto itemDto) {
+    public ResponseEntity<Object> createItem(Long userId, ItemDto itemDto) {
         log.info("ItemClient.createItem, itemDto = {}, userDto = {} ", itemDto, userId);
         return post("", userId, itemDto);
     }
 
-    public ResponseEntity<Object> updateItem (Long userId, ItemDto itemDto, Long id) {
+    public ResponseEntity<Object> updateItem(Long userId, ItemDto itemDto, Long id) {
         log.info("ItemClient.createItem, itemDto = {}, userDto = {}, id = {} ", itemDto, userId, id);
         return patch("/" + id, userId, itemDto);
     }
 
-    public ResponseEntity<Object> deleteItem (Long userId, Long id) {
+    public ResponseEntity<Object> deleteItem(Long userId, Long id) {
         log.info("ItemClient.deleteItem, id = {}, userDto = {} ", id, userId);
         return delete("/" + id, userId); //(userId, id);
     }
@@ -68,7 +68,7 @@ public class ItemClient extends BaseClient {
         return get("/search" + "?text={text}&from={from}&size={size}", userId, parameters);
     }
 
-    public ResponseEntity<Object> createComment (Long userId, Long itemId, CommentDto commentDto) {
-        return post("/" + itemId +"/comment", userId, commentDto);
+    public ResponseEntity<Object> createComment(Long userId, Long itemId, CommentDto commentDto) {
+        return post("/" + itemId + "/comment", userId, commentDto);
     }
 }

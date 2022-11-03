@@ -1,4 +1,4 @@
-# GateWay
+# Server
 FROM amazoncorretto:11-alpine-jdk
 COPY target/*.jar app.jar
-ENTRYPOINT ["java","-jar","/GateWay.jar"]
+ENTRYPOINT ["java","-jar","/Server.jar"]

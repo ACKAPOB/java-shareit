@@ -29,22 +29,22 @@ public class RequestClient extends BaseClient {
         );
     }
 
-    public ResponseEntity<Object> createItemRequest (Long userId, ItemRequestDto itemRequestDto) {
+    public ResponseEntity<Object> createItemRequest(Long userId, ItemRequestDto itemRequestDto) {
         log.info("RequestClient.createItemRequest, userId = {}, itemRequestDto = {}", userId, itemRequestDto.toString());
         return post("", userId, itemRequestDto);
     }
 
-    public ResponseEntity<Object> getAllItemRequest (Long userId) {
+    public ResponseEntity<Object> getAllItemRequest(Long userId) {
         log.info("RequestClient.getAllItemRequest, userId = {} ", userId);
         return get("", userId);
     }
 
-    public ResponseEntity<Object> getItemRequestById (Long userId, Long requestId) {
+    public ResponseEntity<Object> getItemRequestById(Long userId, Long requestId) {
         log.info("RequestClient.getItemRequestById, userId = {} ", userId);
         return get("/" + requestId, userId);
     }
 
-    public ResponseEntity<Object> getItemRequestPageable (Long userId, Integer from, Integer size) {
+    public ResponseEntity<Object> getItemRequestPageable(Long userId, Integer from, Integer size) {
         Map<String, Object> parameters = Map.of(
                 "from", from,
                 "size", size

@@ -13,6 +13,7 @@ import ru.practicum.shareit.booking.dto.BookingState;
 import ru.practicum.shareit.client.BaseClient;
 
 import java.util.Map;
+
 @Slf4j
 @Service
 public class BookingClient extends BaseClient {
@@ -28,7 +29,7 @@ public class BookingClient extends BaseClient {
         );
     }
 
-    public ResponseEntity<Object> createBooking (Long userId, BookingDtoIn bookingDtoIn) {
+    public ResponseEntity<Object> createBooking(Long userId, BookingDtoIn bookingDtoIn) {
         log.info("BookingClient.createBooking, bookingDtoIn = {} ", bookingDtoIn);
         return post("",userId, bookingDtoIn);
     }
