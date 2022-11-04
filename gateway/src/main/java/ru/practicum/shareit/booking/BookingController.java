@@ -49,7 +49,7 @@ public class BookingController {
 	protected ResponseEntity<Object> getBookingsStateGateWay(@RequestHeader("X-Sharer-User-Id") Long userId,
 			@PositiveOrZero @RequestParam(value = "from", defaultValue = "0") Integer from,
 			@Positive @RequestParam(value = "size", defaultValue = "10") Integer size,
-			@RequestParam(value = "state", defaultValue = "ALL") String state) throws MessageFailedException{
+			@RequestParam(value = "state", defaultValue = "ALL") String state) throws MessageFailedException {
 		BookingState bookingState = BookingState.from(state)
 				.orElseThrow(MessageFailedException::new);
 		log.info("BookingController.getBookingsStateGateWay, userId = {}, from = {}, size = {}, state = {}", userId, from, size, state);
