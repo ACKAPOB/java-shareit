@@ -27,7 +27,7 @@ public interface ItemRepository extends JpaRepository<Item, Long> {
 
     @Query("SELECT i FROM ItemRequest i "
             + "WHERE i.requestor.id <> ?1 ORDER BY i.created DESC")
-    List<ItemRequest> getByItemRequestListRequestor(Long idUser, Pageable pageable);
+    Page<ItemRequest> getByItemRequestListRequestor(Long idUser, Pageable pageable);
 
     @Query("select i from Item i " +
             "where upper(i.name) like upper(concat('%', ?1, '%')) " +

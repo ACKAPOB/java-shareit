@@ -63,6 +63,6 @@ public class BookingClient extends BaseClient {
                 "size", size
         );
         log.info("BookingClient.getBookingsOwnerState, userId = {},  from = {}, size = {},  state = {}",userId, from, size, state);
-        return get("?state={state}&from={from}&size={size}", userId, parameters);
+        return get("/owner?state={state}&from={from}&size={size}", userId, parameters);
     }
 }

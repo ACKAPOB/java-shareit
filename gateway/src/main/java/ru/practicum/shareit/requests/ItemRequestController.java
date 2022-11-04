@@ -40,8 +40,8 @@ public class ItemRequestController {
 
     @GetMapping("/all")
     protected ResponseEntity<Object> findItemRequestGateWay(@RequestHeader("X-Sharer-User-Id") Long idUser,
-                                                   @RequestParam(value = "from", required = false) Integer from,
-                                                   @RequestParam(value = "size", required = false) Integer size)
+            @RequestParam(value = "from", defaultValue = "0")  Integer from,
+            @RequestParam(value = "size", defaultValue = "10") Integer size)
             throws ValidationException {
         return requestClient.getItemRequestPageable(idUser, from, size);
     }

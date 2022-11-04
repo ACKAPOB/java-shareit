@@ -17,7 +17,7 @@ import java.util.Map;
 @Service
 public class RequestClient extends BaseClient {
 
-    private static final String API_PREFIX = "/bookings";
+    private static final String API_PREFIX = "/requests";
 
     @Autowired
     public RequestClient(@Value("${shareit-server.url}") String serverUrl, RestTemplateBuilder builder) {
@@ -49,6 +49,6 @@ public class RequestClient extends BaseClient {
                 "from", from,
                 "size", size
         );
-        return get("?from={from}&size={size}", userId, parameters);
+        return get("/all?from={from}&size={size}", userId, parameters);
     }
 }

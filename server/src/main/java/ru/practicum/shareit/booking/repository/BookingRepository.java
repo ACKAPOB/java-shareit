@@ -1,5 +1,6 @@
 package ru.practicum.shareit.booking.repository;
 
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -32,21 +33,21 @@ public interface BookingRepository extends JpaRepository<Booking, Long> {
     List<Booking> findByBookingsListStateRejected(Long idUser, Pageable pageable);
 
     @Query("select b from Booking b where b.item.owner.id = ?1 order by b.start desc")
-    List<Booking> findByBookingsOwnerListStateAll(Long idUser, Pageable pageable);
+    Page<Booking> findByBookingsOwnerListStateAll(Long idUser, Pageable pageable);
 
     @Query("select b from Booking b where b.item.owner.id = ?1 and ?2 between b.start and b.end order by b.start desc")
-    List<Booking> findByBookingsOwnerListStateCurrent(Long idUser, LocalDateTime time, Pageable pageable);
+    Page<Booking> findByBookingsOwnerListStateCurrent(Long idUser, LocalDateTime time, Pageable pageable);
 
     @Query("select b from Booking b where b.item.owner.id = ?1 and b.end < ?2 and b.status <> 'REJECTED'  order by b.start desc")
-    List<Booking> findByBookingsOwnerListStatePast(Long idUser, LocalDateTime time, Pageable pageable);
+    Page<Booking> findByBookingsOwnerListStatePast(Long idUser, LocalDateTime time, Pageable pageable);
 
     @Query("select b from Booking b where b.item.owner.id = ?1 order by b.start desc")
-    List<Booking> findByBookingsOwnerListStateFuture(Long idUser, Pageable pageable);
+    Page<Booking> findByBookingsOwnerListStateFuture(Long idUser, Pageable pageable);
 
     @Query("select b from Booking b where b.item.owner.id = ?1 and b.status = 'WAITING' order by b.start desc")
-    List<Booking> findByBookingsOwnerListStateWaiting(Long idUser, Pageable pageable);
+    Page<Booking> findByBookingsOwnerListStateWaiting(Long idUser, Pageable pageable);
 
     @Query("select b from Booking b where b.item.owner.id = ?1 and b.status = 'REJECTED' order by b.start desc")
-    List<Booking> findByBookingsOwnerListStateRejected(Long idUser);
+    Page<Booking> findByBookingsOwnerListStateRejected(Long idUser, Pageable pageable);
 
 }

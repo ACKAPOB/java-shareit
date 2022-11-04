@@ -2,10 +2,9 @@ package ru.practicum.shareit.requests.service.impl;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
-import ru.practicum.shareit.booking.FromSizeRequest;
 import ru.practicum.shareit.booking.exception.BadRequestException;
 import ru.practicum.shareit.booking.exception.BookingNotFoundException;
 import ru.practicum.shareit.item.dto.ItemMapper;
@@ -95,8 +94,8 @@ public class ItemRequestServiceImpl implements ItemRequestService {
         if (from.isEmpty() || size.isEmpty()) {
             return Collections.emptyList();
         }
-        final Pageable pageable = FromSizeRequest.of(from.get(), size.get(), Sort.by("start").descending());
-        List<ItemRequest> itemRequests = itemRepository.getByItemRequestListRequestor(idUser.get(), pageable);
+        final Pageable pageable = PageRequest.of(from.get(), size.get());
+        List<ItemRequest> itemRequests = itemRepository.getByItemRequestListRequestor(idUser.get(), pageable).getContent();
         List<ItemRequestDto> itemRequestDtos = ItemRequestMapper.toListItemRequestDto(itemRequests);
 
         for (ItemRequestDto itemRequest: itemRequestDtos) {
