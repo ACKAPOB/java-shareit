@@ -18,37 +18,37 @@ public class ItemController {
 
     @PostMapping()
     protected ResponseEntity<Object> createItemGateWay(@Valid @RequestHeader("X-Sharer-User-Id") Long userId,
-                                                       @RequestBody ItemDto itemDto) {
+              @RequestBody ItemDto itemDto) {
         log.info("ItemController.createItemGateWay  userId = {}", userId);
         return itemClient.createItem(userId, itemDto);
     }
 
     @PatchMapping("/{id}")
     protected ResponseEntity<Object> updateItemGateWay(@RequestHeader("X-Sharer-User-Id") Long userId,
-                                 @PathVariable Long id,
-                                 @RequestBody ItemDto itemDto) {
+              @PathVariable Long id,
+              @RequestBody ItemDto itemDto) {
         log.info("ItemController.updateItemGateWay, userId = {}, itemid = {}, itemDto = {}", userId, id, itemDto);
         return itemClient.updateItem(userId, itemDto, id);
     }
 
     @DeleteMapping("/{id}")
     protected ResponseEntity<Object> deleteItemGareWay(@RequestHeader("X-Sharer-User-Id") Long userId,
-                                 @PathVariable Long id) {
+              @PathVariable Long id) {
         log.info("ItemController.deleteItemGareWay, userId = {}, itemid = {}", userId, id);
         return itemClient.deleteItem(userId, id);
     }
 
     @GetMapping()
     protected ResponseEntity<Object> getAllItemsOwnerGateWay(@RequestHeader("X-Sharer-User-Id") Long userId,
-                 @RequestParam(value = "from", defaultValue = "0") Integer from,
-                 @RequestParam(value = "size", defaultValue = "10") Integer size) {
+             @RequestParam(value = "from", defaultValue = "0") Integer from,
+             @RequestParam(value = "size", defaultValue = "10") Integer size) {
         log.info("ItemController.getAllItemsOwnerGateWay, userId = {}", userId);
         return itemClient.getAllItemsOwner(userId, from, size);
     }
 
     @GetMapping("/{id}")
     protected ResponseEntity<Object> getItemByIdGateWay(@RequestHeader("X-Sharer-User-Id") Long userId,
-                                     @PathVariable Long id) {
+            @PathVariable Long id) {
         log.info("ItemController.getItemByIdGateWay, userId = {}, itemid = {}", userId, id);
         return itemClient.getItemById(userId, id);
     }
@@ -64,8 +64,8 @@ public class ItemController {
 
     @PostMapping("/{itemId}/comment")
     protected ResponseEntity<Object> createCommentGateWay(@Valid @RequestHeader("X-Sharer-User-Id") Long userId,
-                                       @PathVariable Long itemId,
-                                       @RequestBody CommentDto commentDto) {
+            @PathVariable Long itemId,
+            @RequestBody CommentDto commentDto) {
         log.info("ItemController.createCommentGateWay, userId = {}, itemid = {}, commentDto = {}", userId, itemId, commentDto);
         return itemClient.createComment(userId, itemId, commentDto);
     }

@@ -15,39 +15,39 @@ public interface BookingRepository extends JpaRepository<Booking, Long> {
 
     Optional<List<Booking>> findByItem_IdAndBooker_id(Long aLong, Long aLong1);
 
-    List<Booking> findBookingsByBookerIdOrderByStartDesc(Long userId, Pageable pageable);
+    Page<Booking> findBookingsByBookerIdOrderByStartDesc(Long userId, Pageable pageable);
 
     @Query("select b from Booking b where b.booker.id = ?1 and ?2 between b.start and b.end order by b.start desc")
-    List<Booking> findByBookingsListStateCurrent(Long idUser, LocalDateTime time, Pageable pageable);
+    Page<Booking> findByBookingsListStateCurrent(Long idUser, LocalDateTime time, Pageable pageable);
 
     @Query("select b from Booking b where b.booker.id = ?1 and b.end < ?2 and b.status <> 'REJECTED' order by b.start desc")
-    List<Booking> findByBookingsListStatePast(Long idUser, LocalDateTime time, Pageable pageable);
+    Page<Booking> findByBookingsListStatePast(Long idUser, LocalDateTime time, Pageable pageable);
 
     @Query("select b from Booking b where b.booker.id = ?1 order by b.start desc")
-    List<Booking> findByBookingsListStateFuture(Long idUser, Pageable pageable);
+    Page<Booking> findByBookingsListStateFuture(Long idUser, Pageable pageable);
 
     @Query("select b from Booking b where b.booker.id = ?1 and b.status = 'WAITING' order by b.start desc")
-    List<Booking> findByBookingsListStateWaiting(Long idUser, Pageable pageable);
+    Page<Booking> findByBookingsListStateWaiting(Long idUser, Pageable pageable);
 
     @Query("select b from Booking b where b.booker.id = ?1 and b.status = 'REJECTED' order by b.start desc")
-    List<Booking> findByBookingsListStateRejected(Long idUser, Pageable pageable);
+    Page<Booking> findByBookingsListStateRejected(Long idUser, Pageable pageable);
 
-    @Query("select b from Booking b where b.item.owner.id = ?1 order by b.start desc")
+    @Query("select b from Booking b where b.item.owner.id = ?1")
     Page<Booking> findByBookingsOwnerListStateAll(Long idUser, Pageable pageable);
 
-    @Query("select b from Booking b where b.item.owner.id = ?1 and ?2 between b.start and b.end order by b.start desc")
+    @Query("select b from Booking b where b.item.owner.id = ?1 and ?2 between b.start and b.end")
     Page<Booking> findByBookingsOwnerListStateCurrent(Long idUser, LocalDateTime time, Pageable pageable);
 
-    @Query("select b from Booking b where b.item.owner.id = ?1 and b.end < ?2 and b.status <> 'REJECTED'  order by b.start desc")
+    @Query("select b from Booking b where b.item.owner.id = ?1 and b.end < ?2 and b.status <> 'REJECTED'")
     Page<Booking> findByBookingsOwnerListStatePast(Long idUser, LocalDateTime time, Pageable pageable);
 
-    @Query("select b from Booking b where b.item.owner.id = ?1 order by b.start desc")
+    @Query("select b from Booking b where b.item.owner.id = ?1")
     Page<Booking> findByBookingsOwnerListStateFuture(Long idUser, Pageable pageable);
 
-    @Query("select b from Booking b where b.item.owner.id = ?1 and b.status = 'WAITING' order by b.start desc")
+    @Query("select b from Booking b where b.item.owner.id = ?1 and b.status = 'WAITING'")
     Page<Booking> findByBookingsOwnerListStateWaiting(Long idUser, Pageable pageable);
 
-    @Query("select b from Booking b where b.item.owner.id = ?1 and b.status = 'REJECTED' order by b.start desc")
+    @Query("select b from Booking b where b.item.owner.id = ?1 and b.status = 'REJECTED'")
     Page<Booking> findByBookingsOwnerListStateRejected(Long idUser, Pageable pageable);
 
 }

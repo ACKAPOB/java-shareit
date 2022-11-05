@@ -3,6 +3,7 @@ package ru.practicum.shareit.booking.service.impl;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.practicum.shareit.booking.FromSizeRequest;
@@ -100,30 +101,29 @@ public class BookingServiceImpl implements BookingService {
                                                 String state)
             throws BadRequestException, MessageFailedException {
         User user = validationUser(userId);
-        //final Pageable pageable = FromSizeRequest.of(from.get(), size.get(), Sort.by("start").descending());
-        final Pageable pageable = FromSizeRequest.of(from.get(), size.get());
+        final Pageable pageable = FromSizeRequest.of(from.get(), size.get(), Sort.by("start").descending());
         switch (state) {
             case "ALL":
                 log.info("Получение ALL Bookings BookingServiceImpl.getBookingsState, userId = {} ", userId);
                 return BookingMapper.toListBookingDto(bookingRepository
-                        .findBookingsByBookerIdOrderByStartDesc(userId.get(), pageable));
+                        .findBookingsByBookerIdOrderByStartDesc(userId.get(), pageable).getContent());
             case "CURRENT":
                 log.info("Получение CURRENT Bookings BookingServiceImpl.getBookingsState, userId = {} ", userId);
                 return BookingMapper.toListBookingDto(bookingRepository
-                        .findByBookingsListStateCurrent(userId.get(), LocalDateTime.now(), pageable));
+                        .findByBookingsListStateCurrent(userId.get(), LocalDateTime.now(), pageable).getContent());
             case "PAST":
                 log.info("Получение PAST Bookings BookingServiceImpl.getBookingsState, userId = {} ", userId);
                 return BookingMapper.toListBookingDto(bookingRepository
-                        .findByBookingsListStatePast(userId.get(), LocalDateTime.now(), pageable));
+                        .findByBookingsListStatePast(userId.get(), LocalDateTime.now(), pageable).getContent());
             case "FUTURE":
                 log.info("Получение FUTURE Bookings BookingServiceImpl.getBookingsState, userId = {} ", userId);
-                return BookingMapper.toListBookingDto(bookingRepository.findByBookingsListStateFuture(userId.get(), pageable));
+                return BookingMapper.toListBookingDto(bookingRepository.findByBookingsListStateFuture(userId.get(), pageable).getContent());
             case "WAITING":
                 log.info("Получение WAITING Bookings BookingServiceImpl.getBookingsState, userId = {} ", userId);
-                return BookingMapper.toListBookingDto(bookingRepository.findByBookingsListStateWaiting(userId.get(), pageable));
+                return BookingMapper.toListBookingDto(bookingRepository.findByBookingsListStateWaiting(userId.get(), pageable).getContent());
             case "REJECTED":
                 log.info("Получение REJECTED Bookings BookingServiceImpl.getBookingsState, userId = {} ", userId);
-                return BookingMapper.toListBookingDto(bookingRepository.findByBookingsListStateRejected(userId.get(), pageable));
+                return BookingMapper.toListBookingDto(bookingRepository.findByBookingsListStateRejected(userId.get(), pageable).getContent());
             default:
                 throw new MessageFailedException();
         }
@@ -136,8 +136,7 @@ public class BookingServiceImpl implements BookingService {
                                                      String state)
             throws MessageFailedException {
         User user = validationUser(userId);
-        //final Pageable pageable = FromSizeRequest.of(from.get(), size.get(), Sort.by("start").descending());
-        final Pageable pageable = FromSizeRequest.of(from.get(), size.get());
+        final Pageable pageable = FromSizeRequest.of(from.get(), size.get(), Sort.by("start").descending());
         switch (state) {
             case "ALL":
                 log.info("Получение ALL Bookings BookingServiceImpl.getBookingsOwnerState, ownerId = {} ", userId);

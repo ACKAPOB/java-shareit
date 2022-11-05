@@ -7,7 +7,6 @@ import ru.practicum.shareit.requests.dto.ItemRequestDto;
 import ru.practicum.shareit.requests.service.ItemRequestService;
 
 import javax.servlet.http.HttpServletRequest;
-import javax.validation.Valid;
 import javax.validation.ValidationException;
 import java.util.List;
 import java.util.Optional;
@@ -31,7 +30,7 @@ public class ItemRequestController {
 
     @PostMapping()
     protected ItemRequestDto createItemRequest(@RequestHeader("X-Sharer-User-Id") Optional<Long> userId,
-                                               @Valid @RequestBody ItemRequestDto itemRequestDto) {
+                     @RequestBody ItemRequestDto itemRequestDto) {
         log.info("Создание Request, ItemRequestController.createItemRequest, userId = {}", userId);
         return itemRequestService.createItemRequest(userId, itemRequestDto);
     }
@@ -44,14 +43,14 @@ public class ItemRequestController {
 
     @GetMapping("/{requestId}")
     protected ItemRequestDto getItemRequest(@RequestHeader("X-Sharer-User-Id") Optional<Long> userId,
-                                            @PathVariable Optional<Long> requestId) {
+                      @PathVariable Optional<Long> requestId) {
         return itemRequestService.getItemRequestById(userId, requestId.get());
     }
 
     @GetMapping("/all")
     protected List<ItemRequestDto> findItemRequest(@RequestHeader("X-Sharer-User-Id") Optional<Long> idUser,
-                                                   @RequestParam(value = "from", required = false) Optional<Integer> from,
-                                                   @RequestParam(value = "size", required = false) Optional<Integer> size)
+                      @RequestParam(value = "from", required = false) Optional<Integer> from,
+                      @RequestParam(value = "size", required = false) Optional<Integer> size)
             throws ValidationException {
         return itemRequestService.getItemRequestPageable(idUser, from, size);
     }
